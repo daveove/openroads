@@ -9,5 +9,6 @@ python ogr2osm.py data/road_network_bohol.shp -t bin/ogr2osm-translations/or-cri
 ## Installation
 To install and patch ogr2osm:
 
+`git submodule init`
 `git submodule update --recursive`
 `patch -d bin/ogr2osm < bin/ogr2osm_user_meta.patch`
