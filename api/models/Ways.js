@@ -35,6 +35,7 @@ module.exports = {
     changeset_id: {
       type: 'integer',
       numerical: true,
+      model: 'changesets'
     },
     timestamp: {
       type: 'datetime',
@@ -47,6 +48,22 @@ module.exports = {
     version: {
       type: 'integer',
       numerical: true
+    },
+
+    //Foreign Keys
+    ways_changeset_id_fkey: {
+        model: 'changesets'
+    }
+  },
+
+  //Translate the entity from the XML parser into a proper model
+  fromJXEntity: function(entityAttr) {
+    return {
+      way_id: Number(entityAttr.id),
+      changeset_id: Number(entityAttr.changeset),
+      timestamp: new Date(),
+      version: entityAttr.version || 0,
+      visible: (typeof entityAttr.visible === 'undefined') || (entityAttr.visible === 'true')
     }
   }
 };

@@ -1,7 +1,7 @@
 /**
 * Changesets.js
 *
-* @description :: Represents nodes.
+* @description :: Represents changesets.
 * For schema, see: http://chrisnatali.github.io/osm_notes/osm_schema.html#changesets
 *
 * In the OSM API, this model times out (closes) an hour after the last update
@@ -32,7 +32,7 @@ module.exports = {
     user_id: {
       type: 'integer',
       index: true,
-      required: true,
+      required: false,
       numerical: true
     },
     created_at: {
@@ -80,10 +80,6 @@ module.exports = {
       greaterThan: 0
     },
 
-    // Foreign keys
-    //changesets_user_id_feky {
-      //model: 'users'
-    //},
   },
 };
 

@@ -1,3 +1,4 @@
+
 /**
 * Nodes.js
 *
@@ -31,6 +32,7 @@ module.exports = {
     changeset_id: {
       type: 'integer',
       numerical: true
+      model: 'changesets'
     },
     visible: {
       type: 'boolean',
@@ -51,11 +53,26 @@ module.exports = {
       numerical: true,
       required: true
     },
+  },
 
-    // Foreign keys
-    //changeset_id_fkey: {
-      //model: 'changesets'
-    //},
+  //Translate the entity from the XML parser into a proper model
+  fromJXEntity: function(entityAttr) {
+    var ratioLat = Number(entityAttr.lat) * GeoInfo.ratio | 0;
+    var ratioLon = Number(entityAttr.lon) * GeoInfo.ratio | 0;
+    var tile = QuadTile.xy2tile(
+                QuadTile.lon2x(ratioLon),
+                QuadTile.lat2y(ratioLat)
+              )
+    return {
+      latitude: ratioLat,
+      longitude: ratioLon,
+      node_id: Number(entityAttr.id),
+      changeset_id: Number(entityAttr.changeset),
+      visible: (typeof entityAttr.visible === 'undefined') || (entityAttr.visible === 'true'),
+      tile: tile,
+      version: entityAttr.version || 0,
+      timestamp: new Date(),
+    }
   }
 };
 

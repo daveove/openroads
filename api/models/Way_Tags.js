@@ -11,7 +11,8 @@ module.exports = {
     way_id: {
         type: 'integer',
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        model: 'ways'
     },
     k: {
         type: 'string',
@@ -24,6 +25,17 @@ module.exports = {
     version: {
         type: 'integer',
         numerical: true
+    },
+
+  },
+
+  //Translate the entity from the XML parser into a proper model
+  fromJXEntity: function(entityAttr) {
+    return {
+      way_id: Number(entityAttr.id),
+      k: entityAttr.k,
+      v: entityAttr.v,
+      version: entityAttr.version || 0
     }
   }
 };

@@ -10,6 +10,14 @@ module.exports = {
     var parentElem;
     var mode = 'create' //Modes can be either create, modify or destroy
 
+    var modelMap = {
+      'node': sails.models.nodes,
+      'way': sails.models.ways,
+      'way_node': sails.models.way_nodes,
+      'way_tag': sails.models.way_tags,
+      'node_tag': sails.models.node_tags
+    }
+
     // Start a streaming parser. On each tag, we check what it is and create entities
     var parser = new libxml.SaxParser();
 
@@ -23,7 +31,8 @@ module.exports = {
       } 
 
       // Check if we're processing an entity
-      if (elem === 'node' || elem === 'way' || elem === 'nd' || elem === 'tag') {
+      if (elem === 'node' || elem === 'way' || elem === 'nd' || elem === 'tag')
+      {
         currEntity = {
           action: mode,
           model: elem,
@@ -40,11 +49,9 @@ module.exports = {
         entity_id = currEntity.attributes.id;
       }
 
-      // If we're processing a way node, we need to do some modifications to the attributes
+      // To enter into the db, we need to do some modifications to the attributes according to the model
       if (elem === 'nd') { 
         currEntity.model = 'way_node';
-        currEntity.attributes['node_id'] = currEntity.attributes['ref']; // rename attribute
-        delete currEntity.attributes.ref;
         currEntity.attributes['way_id'] = entity_id;
         currEntity.attributes['sequence_id'] = sequence_id;
         sequence_id += 1;
@@ -53,11 +60,14 @@ module.exports = {
       // For tags, we have to add the parent's id
       if (elem === 'tag') {
         currEntity.model = parentElem + '_tag';
-        currEntity.attributes[parentElem + '_id'] = entity_id;
+        currEntity.attributes['id'] = entity_id;
       }
 
       // If the entity is "not empty", then we can push it to the array
       if (_.has(currEntity, 'model')) {
+        // Rename the data attributes according to the model
+        currEntity.attributes = modelMap[currEntity.model]
+                                  .fromJXEntity(currEntity.attributes)
         entities.push(currEntity); currEntity = {};
       }
     });
@@ -68,6 +78,32 @@ module.exports = {
         //reset the counter
         sequence_id = 0;
       }
+    })
+
+    // At the end of the document, get the bounding box
+    // Might not be the best way to get bounding box, can we get it from query?
+    parser.on('endDocument', function() {
+      var flattened = _.pluck(entities, 'attributes')
+      var minlon = _.min(flattened, 'longitude' ).longitude
+      var maxlon = _.max(flattened, 'longitude' ).longitude
+      var minlat = _.min(flattened, 'latitude').latitude
+      var maxlat = _.max(flattened, 'latitude').latitude
+      var id = _.pluck(flattened, 'changeset_id')[0]
+      entities.unshift({
+        action: 'create',
+        model: 'changeset',
+        attributes: {
+          user_id: 1,
+          id: id,
+          created_at: new Date(),
+          min_lat: minlat,
+          min_lon: minlon,
+          max_lat: maxlat,
+          max_lon: maxlon,
+          closed_at: new Date(),
+          num_changes: entities.length
+        }
+      })
     })
 
     // Pass in the XML string
