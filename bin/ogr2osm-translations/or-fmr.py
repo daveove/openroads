@@ -51,14 +51,20 @@ def filterTags(attrs):
   tags.update({'highway':'road'})
 
   # Add the road name
-  if attrs['ROAD_NAME']:
-    tags.update({'name':attrs['ROAD_NAME'].strip(' ')})
+  if attrs['FolderPath']:
+    tags.update({'name':attrs['FolderPath'].strip(' ')})
   
-  if attrs['MUN_NAME']:
-    tags.update({'or_mun':attrs['MUN_NAME'].strip(' ').title()})
+  if attrs['id_fmrdp']:
+    tags.update({'fmr_id':attrs['id_fmrdp'].strip(' ').title()})
 
-  if attrs['BRGY_NAME']:
-    tags.update({'or_brgy':attrs['BRGY_NAME'].strip(' ').title()})
+  if attrs['status']:
+    tags.update({'status':attrs['status'].strip(' ').title()})
+
+  if attrs['sp_cost']:
+    tags.update({'sp_cost':attrs['sp_cost']})
+
+  if attrs['sp_costrev']:
+    tags.update({'sp_costrev':attrs['sp_costrev']})
 
   return tags
 
