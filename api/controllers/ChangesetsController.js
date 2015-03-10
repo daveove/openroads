@@ -64,40 +64,44 @@ var actions = [ { action: 'create',
 
 
 module.exports = {
-
   create: function(req, res) {
-    // Returns an XML doc from request body, or errors out.
+    // Parses XML into JSON change representation.
+    var xml = req.body.xmlString
     try {
-    console.log('in the try block')
-     // var actions = XML.readChanges(req.body.xmlString);
-    knex.transaction(function(trx) {
-      console.log('in the transaction')
-      Promise.each(actions, function(entry) {
-        console.log(entry)
-        if (entry.action === 'create') {
-          console.log('in the create block')
-          var table = entry.model + 's';
-          return knex(table).insert(entry.attributes).transacting(trx)
-        } else if (entry.action === 'modify') {
-
-        } else if (entry.action === 'delete') {
-
-        }
-      })
-      .then(trx.commit)
-      .catch(trx.rollback)
-     }).then(function() {
-      console.log('at the end')
-     }).catch(function(error) {
-      console.error('error: ', error)
-     });
-
-
+      var action = XML.readChanges(xml);
     }
     catch(e) {
-      return res.badRequest('XML malformed');
+      return res.badRequest('Problem parsing changeset xml');
     }
 
+    // Uses change representation to update the database
+    try {
+      console.log('in the try block')
+      knex.transaction(function(trx) {
+        console.log('in the transaction')
+        Promise.each(actions, function(entry) {
+          console.log(entry)
+          if (entry.action === 'create') {
+            console.log('in the create block')
+            var table = entry.model + 's';
+            return knex(table).insert(entry.attributes).transacting(trx)
+          } else if (entry.action === 'modify') {
+
+          } else if (entry.action === 'delete') {
+
+          }
+        })
+        .then(trx.commit)
+        .catch(trx.rollback)
+      }).then(function() {
+        console.log('at the end')
+      }).catch(function(error) {
+        console.error('error: ', error)
+      });
+    }
+    catch(e) {
+      return res.badRequest('Error commiting changes');
+    }
     // Place-holder response.
     return res.json([]);
   },
