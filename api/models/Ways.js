@@ -51,9 +51,10 @@ module.exports = {
     },
 
     //Foreign Keys
-    ways_changeset_id_fkey: {
-        model: 'changesets'
-    }
+    // TODO this is the wrong column name, throws an error
+    //ways_changeset_id_fkey: {
+        //model: 'changesets'
+    //}
   },
 
   //Translate the entity from the XML parser into a proper model
