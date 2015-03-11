@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var geoRatio = require('./GeoInfo').ratio;
 var maxArea = require('./MaxArea').area;
 
 var nullLatLon = [null,null,null,null];
@@ -6,6 +7,7 @@ var lonLimit = 180.0;
 var latLimit = 90.0;
 
 // In OSM, the order goes min_lon, min_lat, max_lon, max_lat.
+// All bounding box checks assume the input is unscaled.
 function Bbox(minMaxLatLon) {
 
   var bounds = _.map(minMaxLatLon, function(coord) {
@@ -79,6 +81,14 @@ Bbox.prototype.toString = function() {
   return this.toArray().join(',');
 }
 
+Bbox.prototype.toScaled = function() {
+  this.minLon *= geoRatio;
+  this.minLat *= geoRatio;
+  this.maxLon *= geoRatio;
+  this.maxLat *= geoRatio;
+  return this;
+}
+
 function isValidBounds(bounds) {
   for(var i = 0; i < 4; ++i) {
     var coord = bounds[i];
@@ -89,20 +99,9 @@ function isValidBounds(bounds) {
   return true;
 }
 
-module.exports = {
-  fromString: function(paramString) {
-    // Should be three commas in the string query
-    var commaCount = (paramString.match(/,/g) || []).length;
-    if (commaCount === 3) {
-      return new Bbox(paramString.split(','));
-    }
-    else {
-      return new Bbox(nullLatLon);
-    }
-  },
-  fromCoordinates: function(minLon, minLat, maxLon, maxLat) {
-    var coordinates = [minLon, minLat, maxLon, maxLat];
-    if (_.every([coordinates], function(coordinate) {
+var getBbox = {
+  fromCoordinates: function(coordinates) {
+    if (_.every(coordinates, function(coordinate) {
       return coordinate && !isNaN(coordinate);
     })) {
       return new Bbox(coordinates);
@@ -111,4 +110,24 @@ module.exports = {
       return new Bbox(nullLatLon);
     }
   },
-}
+  fromScaledActions: function(actions) {
+    var lat = [];
+    var lon = [];
+    var nodes = _.filter(actions, function(action) {
+      return action.model === 'node';
+    });
+    for(var i = 0, ii = nodes.length; i < ii; ++i) {
+      var attributes = nodes[i].attributes;
+      lon.push(parseFloat(attributes.longitude));
+      lat.push(parseFloat(attributes.latitude));
+    }
+    return new Bbox([
+      _.min(lon) / geoRatio,
+      _.min(lat) / geoRatio,
+      _.max(lon) / geoRatio,
+      _.max(lat) / geoRatio
+    ]);
+  },
+};
+
+module.exports = getBbox;
