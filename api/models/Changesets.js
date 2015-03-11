@@ -22,50 +22,42 @@ module.exports = {
       autoIncrement: true,
       unique: true,
       primaryKey: true,
-      numerical: true
+      numeric: true,
+      index: true
     },
     user_id: {
       type: 'integer',
       index: true,
       required: false,
-      numerical: true
+      numeric: true
     },
     created_at: {
       type: 'datetime',
-      index: true,
-      required: true
+    },
+    closed_at: {
+      type: 'datetime',
     },
     min_lat: {
       type: 'integer',
       index: true,
-      numerical: true,
-      truthy: true
     },
     min_lon: {
       type: 'integer',
       index: true,
-      numerical: true,
-      truthy: true
     },
     max_lat: {
       type: 'integer',
       index: true,
-      numerical: true,
-      truthy: true
     },
     max_lon: {
       type: 'integer',
       index: true,
-      numerical: true,
-      truthy: true
     },
     num_changes: {
       type: 'integer',
       required: true,
-      numerical: true,
-      greaterThan: 0
+      numeric: true
     },
-
   },
 };
 
