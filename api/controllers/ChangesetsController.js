@@ -66,6 +66,7 @@ module.exports = {
         var actions = XML.readChanges(xml);
       }
       catch(e) {
+        Changesets.destroy({ id: cs.id });
         return res.badRequest('Problem parsing changeset xml');
       }
 
