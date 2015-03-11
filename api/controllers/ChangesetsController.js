@@ -3,106 +3,110 @@ var knex = require('knex')({
   client: 'pg',
   connection: sails.config.connections.osmPostgreSQL,
   debug: 'true'
-})
-var Promise = require('bluebird')
-
-//Create a way
-var actions = [ { action: 'create',
-    model: 'changeset',
-    attributes:
-     { id: 123,
-       user_id: 1,
-       created_at: new Date(),
-       min_lat: 96322008,
-       min_lon: 1238362150,
-       max_lat: 96356914,
-       max_lon: 1238402705,
-       closed_at: new Date(),
-       num_changes: 7 } },
-  { action: 'create',
-    model: 'node',
-    attributes:
-     { latitude: 96322008,
-       longitude: 1238362150,
-       node_id: -7,
-       changeset_id: 123,
-       visible: true,
-       tile: 3823859596,
-       version: '0',
-       timestamp: new Date() } },
-  { action: 'create',
-    model: 'node',
-    attributes:
-     { latitude: 96356914,
-       longitude: 1238402705,
-       node_id: -10,
-       changeset_id: 123,
-       visible: true,
-       tile: 3224965180,
-       version: '0',
-       timestamp: new Date() } },
-  { action: 'create',
-    model: 'way',
-    attributes:
-     { way_id: -4,
-       changeset_id: 123,
-       timestamp: new Date(),
-       version: '0',
-       visible: true } },
-  { action: 'create',
-    model: 'way_node',
-    attributes: { way_id: -4, node_id: -7, version: 0, sequence_id: 0 } },
-  { action: 'create',
-    model: 'way_node',
-    attributes: { way_id: -4, node_id: -10, version: 0, sequence_id: 1 } },
-  { action: 'create',
-    model: 'way_tag',
-    attributes: { way_id: -4, k: 'highway', v: 'residential', version: 0 } },
-  { action: 'create',
-    model: 'way_tag',
-    attributes: { way_id: -4, k: 'name', v: 'Fake Street', version: 0 } } ]
-
+});
+var Promise = require('bluebird');
 
 module.exports = {
+
   create: function(req, res) {
-    // Parses XML into JSON change representation.
-    var xml = req.body.xmlString
-    try {
-      var action = XML.readChanges(xml);
-    }
-    catch(e) {
-      return res.badRequest('Problem parsing changeset xml');
+    // TODO save changeset comment along with changeset
+    var changesetComment = req.body.comment;
+
+    // Check if User exists; if not, create user.
+    // TODO Need a better way to control users here;
+    // this is strictly for beta purposes.
+    var userName = req.body.user;
+    var userID = req.body.uid;
+    Users.findOrCreate({ id: userID }, {
+      id: userID,
+      display_name: userName,
+      creation_time: new Date()
+    }, function(err, user) {
+      if (err) {
+        sails.log(err);
+        return res.badRequest('Encountered error creating or finding user');
+      }
+      // Fill an object with changeset attributes
+      var created = new Date();
+      var closed = new Date();
+      closed.setHours(created.getHours() + 1);
+      var cs = {
+        user_id: userID,
+        created_at: created,
+        closed_at: closed,
+        num_changes: 0
+      }
+      Changesets.create(cs, function createChangeset(err, changeset) {
+        if (err) {
+          sails.log(err);
+          return res.badRequest('Encountered error creating a new changeset');
+        }
+        return res.ok(changeset);
+      });
+    });
+  },
+
+  upload: function(req, res) {
+    var changesetID = req.param('changeset_id');
+    if (!changesetID || isNaN(changesetID)) {
+      return res.badRequest('Changeset ID must be a non-zero number');
     }
 
-    // Uses change representation to update the database
-    try {
-      console.log('in the try block')
+    Changesets.find({ id: changesetID }).exec(function changesetResp(err, changesets) {
+      if (err) {
+        sails.log(err);
+        return res.badRequest('Encountered error finding changeset');
+      }
+      else if (!changesets.length) {
+        return res.badRequest('Not a valid changeset');
+      }
+      var cs = changesets[0];
+      var xml = req.body.xmlString;
+      try {
+        var actions = XML.readChanges(xml);
+      }
+      catch(e) {
+        return res.badRequest('Problem parsing changeset xml');
+      }
+
+      // Uses change representation to update the database
       knex.transaction(function(trx) {
-        console.log('in the transaction')
         Promise.each(actions, function(entry) {
-          console.log(entry)
           if (entry.action === 'create') {
-            console.log('in the create block')
             var table = entry.model + 's';
             return knex(table).insert(entry.attributes).transacting(trx)
-          } else if (entry.action === 'modify') {
-
-          } else if (entry.action === 'delete') {
-
+          }
+          else if (entry.action === 'modify') {
+            // TODO
+          }
+          else if (entry.action === 'delete') {
+            // TODO
           }
         })
         .then(trx.commit)
         .catch(trx.rollback)
       }).then(function() {
-        console.log('at the end')
+        sails.log('at the end')
       }).catch(function(error) {
-        console.error('error: ', error)
+        Changesets.destroy({ id: cs.id });
+        sails.log('error: ', error)
       });
-    }
-    catch(e) {
-      return res.badRequest('Error commiting changes');
-    }
-    // Place-holder response.
-    return res.json([]);
-  },
+
+      // If all goes well, update the changeset
+      var bbox = BoundingBox.fromScaledActions(actions).toScaled();
+      Changesets.update({ id: cs.id }, {
+        min_lon: bbox.minLon,
+        min_lat: bbox.minLat,
+        max_lon: bbox.maxLon,
+        max_lat: bbox.maxLat,
+        closed_at: new Date()
+      }).exec(function updateChangeset(err, changeset) {
+        if (err) {
+          sails.log(err);
+        }
+        return res.ok(changeset);
+      });
+
+    });
+  }
 }
