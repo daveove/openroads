@@ -11,7 +11,7 @@ module.exports = {
       type: 'integer',
       unique: true,
       primaryKey: true,
-      numerical: true,
+      numeric: true,
       index: true,
     },
     display_name: {
@@ -22,6 +22,23 @@ module.exports = {
       type: 'datetime',
       datetime: true,
       required: true
+    },
+
+
+    // TODO unnecessary to keep these since we don't want to store them,
+    // but currently required by the database schema.
+    // Remove for production.
+    email: {
+      type: 'email',
+      defaultsTo: 'openroads-user@openroads.org'
+    },
+    pass_crypt: {
+      type: 'string',
+      defaultsTo: '00000000000000000000000000000000'
+    },
+    data_public: {
+      type: 'boolean',
+      defaultsTo: true
     }
   }
 };
