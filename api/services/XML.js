@@ -28,7 +28,7 @@ module.exports = {
       if (elem === 'create' || elem === 'modify' || elem === 'destroy') {
         mode = elem;
         return
-      } 
+      }
 
       // Check if we're processing an entity
       if (elem === 'node' || elem === 'way' || elem === 'nd' || elem === 'tag')
@@ -50,7 +50,7 @@ module.exports = {
       }
 
       // To enter into the db, we need to do some modifications to the attributes according to the model
-      if (elem === 'nd') { 
+      if (elem === 'nd') {
         currEntity.model = 'way_node';
         currEntity.attributes['way_id'] = entity_id;
         currEntity.attributes['sequence_id'] = sequence_id;
@@ -78,32 +78,6 @@ module.exports = {
         //reset the counter
         sequence_id = 0;
       }
-    })
-
-    // At the end of the document, get the bounding box
-    // Might not be the best way to get bounding box, can we get it from query?
-    parser.on('endDocument', function() {
-      var flattened = _.pluck(entities, 'attributes')
-      var minlon = _.min(flattened, 'longitude' ).longitude
-      var maxlon = _.max(flattened, 'longitude' ).longitude
-      var minlat = _.min(flattened, 'latitude').latitude
-      var maxlat = _.max(flattened, 'latitude').latitude
-      var id = _.pluck(flattened, 'changeset_id')[0]
-      entities.unshift({
-        action: 'create',
-        model: 'changeset',
-        attributes: {
-          user_id: 1,
-          id: id,
-          created_at: new Date(),
-          min_lat: minlat,
-          min_lon: minlon,
-          max_lat: maxlat,
-          max_lon: maxlon,
-          closed_at: new Date(),
-          num_changes: entities.length
-        }
-      })
     })
 
     // Pass in the XML string
