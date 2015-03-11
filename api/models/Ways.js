@@ -58,14 +58,19 @@ module.exports = {
   },
 
   //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
-    return {
-      way_id: Number(entityAttr.id),
-      changeset_id: Number(entityAttr.changeset),
+  fromJXEntity: function(entity, create) {
+    var model = {
+      changeset_id: parseInt(entity.changeset, 10),
       timestamp: new Date(),
-      version: entityAttr.version || 0,
-      visible: (typeof entityAttr.visible === 'undefined') || (entityAttr.visible === 'true')
+      version: parseInt(entity.version, 10) || 0,
+      visible: !!entity.visible
+    };
+
+    // Don't include an id if we're trying to create a new way.
+    if (!create && entity.id) {
+      model.way_id = parseInt(entity.id, 10)
     }
+    return model;
   }
 };
 

@@ -28,12 +28,12 @@ module.exports = {
   },
 
    //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
+  fromJXEntity: function(entity) {
     return {
-      way_id: Number(entityAttr.way_id),
-      node_id: Number(entityAttr.ref),
-      version: entityAttr.version || 0,
-      sequence_id: entityAttr.sequence_id
+      way_id: parseInt(entity.way_id, 10),
+      node_id: parseInt(entity.ref, 10),
+      version: parseInt(entity.version, 10) || 0,
+      sequence_id: parseInt(entity.sequence_id)
     }
   }
 };

@@ -56,23 +56,25 @@ module.exports = {
   },
 
   //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
-    var ratioLat = Number(entityAttr.lat) * GeoInfo.ratio | 0;
-    var ratioLon = Number(entityAttr.lon) * GeoInfo.ratio | 0;
-    var tile = QuadTile.xy2tile(
-                QuadTile.lon2x(ratioLon),
-                QuadTile.lat2y(ratioLat)
-              )
-    return {
-      latitude: ratioLat,
-      longitude: ratioLon,
-      node_id: Number(entityAttr.id),
-      changeset_id: Number(entityAttr.changeset),
-      visible: (typeof entityAttr.visible === 'undefined') || (entityAttr.visible === 'true'),
-      tile: tile,
-      version: entityAttr.version || 0,
-      timestamp: new Date(),
+  fromJXEntity: function(entity, create) {
+    var ratio = GeoInfo.ratio;
+    var lat = parseInt(entity.lat) * ratio || null,
+    var lon = parseInt(entity.lon) * ratio || null,
+
+    var model = {
+      latitude: lat,
+      longitude: lon,
+      tile: QuadTile.xy2tile(QuadTile.lon2x(lon), QuadTile.lat2y(lat)),
+      changeset_id: parseInt(entity.changeset, 10),
+      visible: !!entity.visible,
+      version: entity.version || 0,
+      timestamp: new Date()
+    };
+
+    if (!create && entity.id) {
+      model.node_id = entity.id;
     }
+
+    return model;
   }
 };
-
