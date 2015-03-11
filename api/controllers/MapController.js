@@ -5,8 +5,15 @@ module.exports = {
 
     // Creates a new bounding box object.
     // See api/services/BoundingBox.js.
-    var bbox = BoundingBox.fromString(req.query.bbox);
-    if (bbox.error) {
+    var paramString = req.query.bbox;
+    var commaCount = (paramString.match(/,/g) || []).length;
+    if (commaCount === 3) {
+      var bbox = new BoundingBox.fromCoordinates(paramString.split(','));
+      if (bbox.error) {
+        return res.badRequest(bbox.error);
+      }
+    }
+    else {
       return res.badRequest(bbox.error);
     }
 
