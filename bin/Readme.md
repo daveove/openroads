@@ -4,8 +4,10 @@ ogr2osm is used to transform the OR shapefiles to OSM XML. For this project, we 
 ## Usage
 
 ```bash 
-python ogr2osm.py data/road_network_bohol.shp -t bin/ogr2osm-translations/or-crid.py --add-version --add-user="openroads" --add-uid="1919292"
+python ogr2osm.py data/road_network_bohol.shp -t bin/ogr2osm-translations/or-crid.py --add-version --add-user="openroads" --add-uid="1919292 --positive-id --add-timestamp"
 ```
+
+Note that it is not recommended to add version, user, uid and timestamp, nor use positive id's. For the initial OpenRoads import into the db this is necessary though.
 
 ## Installation
 To install and patch ogr2osm:
