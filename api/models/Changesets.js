@@ -16,11 +16,6 @@ module.exports = {
   // Maximum number of elements allowed in a changeset
   max: 50000,
 
-  bbox: function() {
-    this.bbox =  BoundingBox.fromCoordinates(this.min_lon, this.min_lat, this.max_lon, this.max_lat);
-    return this.bbox;
-  },
-
   attributes: {
     id: {
       type: 'integer',
@@ -43,35 +38,26 @@ module.exports = {
     min_lat: {
       type: 'integer',
       index: true,
-      required: true,
       numerical: true,
       truthy: true
     },
     min_lon: {
       type: 'integer',
       index: true,
-      required: true,
       numerical: true,
       truthy: true
     },
     max_lat: {
       type: 'integer',
       index: true,
-      required: true,
       numerical: true,
       truthy: true
     },
     max_lon: {
       type: 'integer',
       index: true,
-      required: true,
       numerical: true,
       truthy: true
-    },
-    closed_at: {
-      type: 'datetime',
-      index: true,
-      required: true
     },
     num_changes: {
       type: 'integer',
