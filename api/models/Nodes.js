@@ -10,12 +10,15 @@
 
 module.exports = {
 
+  tableName: 'current_nodes',
+
   attributes: {
-    node_id: {
+    id: {
       type: 'integer',
       autoIncrement: true,
       unique: true,
       primaryKey: true,
+      index: true
     },
     latitude: {
       type: 'integer',
