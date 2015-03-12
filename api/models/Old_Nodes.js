@@ -15,8 +15,9 @@ module.exports = {
   attributes: {
     node_id: {
       type: 'integer',
-      index: true,
-      primaryKey: true
+      primaryKey: true,
+      unique: true,
+      index: true
     },
     version: {
       type: 'integer',

@@ -24,6 +24,8 @@ module.exports = {
     return ways;
   },
 
+  tableName: 'current_ways',
+
   attributes: {
     way_id: {
       type: 'integer',
@@ -49,13 +51,8 @@ module.exports = {
       type: 'integer',
       numerical: true
     },
-
-    //Foreign Keys
-    // TODO this is the wrong column name, throws an error
-    //ways_changeset_id_fkey: {
-        //model: 'changesets'
-    //}
   },
+
 
   //Translate the entity from the XML parser into a proper model
   fromJXEntity: function(entity, create) {
