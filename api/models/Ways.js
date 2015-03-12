@@ -60,14 +60,18 @@ module.exports = {
       changeset_id: parseInt(entity.changeset, 10),
       timestamp: new Date(),
       version: parseInt(entity.version, 10) || 0,
-      visible: !!entity.visible
+      visible: (entity.visible !== 'false' && entity.visible !== false),
     };
 
     // Don't include an id if we're trying to create a new way.
     if (!create && entity.id) {
-      model.way_id = parseInt(entity.id, 10)
+      model.id = parseInt(entity.id, 10)
     }
     return model;
-  }
+  },
+
+  configureIDs: function(id) {
+    console.log(id);
+  },
 };
 

@@ -68,9 +68,11 @@ module.exports = {
       // If the entity is "not empty", then we can push it to the array
       if (_.has(entity, 'model')) {
         // If the mode is create, set a create flag so we don't try to use the negative iD.
-        var create = entity.action === 'create'
+        // TODO we may need to save the entity id here to match against other parts
+        // of the changeset later
+        //var create = entity.action === 'create'
         // Rename the data attributes according to the model
-        entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes, create)
+        entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes, false);
         entities.push(entity);
         entity = {};
       }

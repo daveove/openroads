@@ -34,9 +34,12 @@ module.exports = {
     return {
       way_id: parseInt(entity.way_id, 10),
       node_id: parseInt(entity.ref, 10),
-      version: parseInt(entity.version, 10) || 0,
       sequence_id: parseInt(entity.sequence_id)
     }
-  }
+  },
+
+  configureIDs: function(id) {
+    console.log(id);
+  },
 };
 

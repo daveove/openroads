@@ -69,14 +69,18 @@ module.exports = {
       longitude: lon,
       tile: QuadTile.xy2tile(QuadTile.lon2x(lon), QuadTile.lat2y(lat)),
       changeset_id: parseInt(entity.changeset, 10),
-      visible: !!entity.visible,
+      visible: (entity.visible !== 'false' && entity.visible !== false),
       version: parseInt(entity.version, 10) || 0,
       timestamp: new Date()
     };
 
     if (!create && entity.id) {
-      model.node_id = parseInt(entity.id, 10);
+      model.id = parseInt(entity.id, 10);
     }
     return model;
-  }
+  },
+
+  configureIDs: function(id) {
+    console.log(id);
+  },
 };
