@@ -55,18 +55,13 @@ module.exports = {
 
 
   //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entity, create) {
+  fromJXEntity: function(entity) {
     var model = {
       changeset_id: parseInt(entity.changeset, 10),
       timestamp: new Date(),
       version: parseInt(entity.version, 10) || 0,
       visible: (entity.visible !== 'false' && entity.visible !== false),
     };
-
-    // Don't include an id if we're trying to create a new way.
-    if (!create && entity.id) {
-      model.id = parseInt(entity.id, 10)
-    }
     return model;
   },
 
