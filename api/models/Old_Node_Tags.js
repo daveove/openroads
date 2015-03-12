@@ -7,7 +7,7 @@
 
 module.exports = {
 
-  tableName: 'current_node_tags',
+  tableName: 'node_tags',
 
   attributes: {
     node_id: {
@@ -24,16 +24,11 @@ module.exports = {
       type: 'string',
       truthy: true
     },
+    version: {
+      type: 'integer',
+      numerical: true
+    },
   },
 
-  //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
-    return {
-      node_id: Number(entityAttr.id),
-      k: entityAttr.k,
-      v: entityAttr.v,
-      version: entityAttr.version || 0,
-    }
-  }
+  fromNodeTag: function() {}
 };
-
