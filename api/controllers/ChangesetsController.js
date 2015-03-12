@@ -69,6 +69,7 @@ module.exports = {
         Changesets.destroy({ id: cs.id });
         return res.badRequest('Problem parsing changeset xml');
       }
+      var transactionError = false;
 
       // Uses change representation to update the database
       knex.transaction(function(trx) {
@@ -88,25 +89,30 @@ module.exports = {
         .catch(trx.rollback)
       }).then(function() {
         sails.log('at the end')
+
+        // If all goes well, update the changeset
+        var bbox = BoundingBox.fromScaledActions(actions).toScaled();
+        Changesets.update({ id: cs.id }, {
+          min_lon: bbox.minLon,
+          min_lat: bbox.minLat,
+          max_lon: bbox.maxLon,
+          max_lat: bbox.maxLat,
+          closed_at: new Date()
+        }).exec(function updateChangeset(err, changeset) {
+          if (err) {
+            sails.log(err);
+            return res.serverError('Could not update changeset')
+          }
+          return res.ok(changeset);
+        });
+
       }).catch(function(error) {
         Changesets.destroy({ id: cs.id });
         sails.log('error: ', error)
+
+        return res.serverError('Could not complete transaction')
       });
 
-      // If all goes well, update the changeset
-      var bbox = BoundingBox.fromScaledActions(actions).toScaled();
-      Changesets.update({ id: cs.id }, {
-        min_lon: bbox.minLon,
-        min_lat: bbox.minLat,
-        max_lon: bbox.maxLon,
-        max_lat: bbox.maxLat,
-        closed_at: new Date()
-      }).exec(function updateChangeset(err, changeset) {
-        if (err) {
-          sails.log(err);
-        }
-        return res.ok(changeset);
-      });
 
     });
   }
