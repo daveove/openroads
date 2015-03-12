@@ -9,20 +9,22 @@
 
 module.exports = {
 
+  tableName: 'current_way_nodes',
+
   attributes: {
     way_id: {
       type: 'integer',
       primaryKey: true,
-      numerical: true
-
+      numerical: true,
+      index: true,
+      model: 'ways'
     },
     sequence_id: {
       type: 'integer',
-      primaryKey: true,
-      numerical: true
     },
     node_id: {
       type: 'integer',
+      index: true,
       numerical: true
     },
   },
