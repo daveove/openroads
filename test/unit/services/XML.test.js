@@ -4,30 +4,19 @@ var xmlNodeModify = '<osmChange version="0.3" generator="iD">' +
     '<node id="-76703" lon="123.83676223498107" lat="9.632539331799256" version="1" changeset="123"/>' + 
   '</modify>'  +
   '<delete if-unused="true"/>' +
-'</osmChange>' 
+'</osmChange>'
 
-var jsonNodeModify = [ { action: 'create',
-    model: 'changeset',
-    attributes:
-     { id: 123,
-       user_id: 1,
-       created_at: new Date(),
-       min_lat: 96325393,
-       min_lon: 1238367622,
-       max_lat: 96325393,
-       max_lon: 1238367622,
-       closed_at: new Date(),
-       num_changes: 1 } },
+var jsonNodeModify = [
   { action: 'modify',
     model: 'node',
     attributes:
      { latitude: 96325393,
        longitude: 1238367622,
-       node_id: -76703,
+       id: -76703,
        changeset_id: 123,
        visible: true,
        tile: 373828584,
-       version: '1',
+       version: 1,
        timestamp: new Date() }  } ]
 
 var xmlCreateWay = '<osmChange version="0.3" generator="iD">' +
@@ -42,57 +31,46 @@ var xmlCreateWay = '<osmChange version="0.3" generator="iD">' +
     '</way>' + 
   '</create>' + 
   '<modify/>' + 
-  '<delete if-unused="true"/>' + 
+  '<delete if-unused="true"/>' +
 '</osmChange>'
 
-var jsonWayCreate = [ { action: 'create',
-    model: 'changeset',
-    attributes:
-     { id: 123,
-       user_id: 1,
-       created_at: new Date(),
-       min_lat: 96322008,
-       min_lon: 1238362150,
-       max_lat: 96356914,
-       max_lon: 1238402705,
-       closed_at: new Date(),
-       num_changes: 7 } },
+var jsonWayCreate = [
   { action: 'create',
     model: 'node',
     attributes:
      { latitude: 96322008,
        longitude: 1238362150,
-       node_id: -7,
+       id: -7,
        changeset_id: 123,
        visible: true,
        tile: 3823859596,
-       version: '0',
+       version: 0,
        timestamp: new Date() } },
   { action: 'create',
     model: 'node',
     attributes:
      { latitude: 96356914,
        longitude: 1238402705,
-       node_id: -10,
+       id: -10,
        changeset_id: 123,
        visible: true,
        tile: 3224965180,
-       version: '0',
+       version: 0,
        timestamp: new Date() } },
   { action: 'create',
     model: 'way',
     attributes:
-     { way_id: -4,
+     { id: -4,
        changeset_id: 123,
        timestamp: new Date(),
-       version: '0',
+       version: 0,
        visible: true } },
   { action: 'create',
     model: 'way_node',
-    attributes: { way_id: -4, node_id: -7, version: 0, sequence_id: 0 } },
+    attributes: { way_id: -4, node_id: -7, sequence_id: 0 } },
   { action: 'create',
     model: 'way_node',
-    attributes: { way_id: -4, node_id: -10, version: 0, sequence_id: 1 } },
+    attributes: { way_id: -4, node_id: -10, sequence_id: 1 } },
   { action: 'create',
     model: 'way_tag',
     attributes: { way_id: -4, k: 'highway', v: 'residential', version: 0 } },
