@@ -111,7 +111,7 @@ module.exports = {
       for (var i = 0, ii = nodes.length; i < ii; ++i) {
         var node = nodes[i];
         root.node('node').attr({
-          id: node.node_id,
+          id: node.id,
           visible: node.visible,
           version: node.version,
           changeset: node.changeset_id,
@@ -128,7 +128,7 @@ module.exports = {
       for (var i = 0, ii = ways.length; i < ii; ++i) {
         var way = ways[i];
         var wayEl = root.node('way').attr({
-          id: way.way_id,
+          id: way.id,
           visible: way.visible,
           version: way.version,
           changeset: way.changeset_id,
