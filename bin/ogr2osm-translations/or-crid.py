@@ -1,6 +1,8 @@
 '''
 A translation function for ogr2osm for OpenRoads CRID data.
 
+To be run on the 
+
 The following fields are dropped from the source shapefile:
 
 Field           Definition            Reason
@@ -12,7 +14,7 @@ The following fields are used:
 Field           Used for              Reason
 ROAD_NAME       name=ROAD_NAME        Name of the road
 RD_CLASS        highway=*             Type of the road
-                or_class=RD_CLASS     Keep original type of road
+                or_rdclass=RD_CLASS   Keep original type of road
 MUN_NAME        or_mun=MUN_NAME       Municipality
 BRGY_NAME       or_brgy=BRGY_NAME     Barangay
 RD_TYPE         surface=RD_TYPE       Surface type
@@ -33,18 +35,13 @@ def filterTags(attrs):
 
   tags = {}
 
-  # Add the source
-  tags.update({'source':'OpenRoads'})
+
+  #----------------------
+  # OSM fields
 
   # Add the road name
   if attrs['ROAD_NAME']:
     tags.update({'name':attrs['ROAD_NAME'].strip(' ')})
-  
-  if attrs['MUN_NAME']:
-    tags.update({'or_mun':attrs['MUN_NAME'].strip(' ').title()})
-
-  if attrs['BRGY_NAME']:
-    tags.update({'or_brgy':attrs['BRGY_NAME'].strip(' ').title()})
 
   # Map the road type to the OSM highway classification
   if attrs['RD_CLASS'] and attrs['RD_CLASS'] == "NATIONAL":
@@ -58,12 +55,26 @@ def filterTags(attrs):
   else:
     tags.update({'highway':'road'})
 
-  # Though included in above mapping, store the original road classification
-  if attrs['RD_CLASS']:
-    tags.update({'or_class':attrs['RD_CLASS'].strip(' ').lower()})
-
   # Road condition
   if attrs['RD_COND']:
     tags.update({'rd_cond':attrs['RD_COND'].strip(' ').lower()})
+  
+  # Add the source
+  tags.update({'source':'OpenRoads'})
+
+
+  #----------------------
+  # Custom OR fields
+
+  if attrs['MUN_NAME']:
+    tags.update({'or_mun':attrs['MUN_NAME'].strip(' ').title()})
+
+  if attrs['BRGY_NAME']:
+    tags.update({'or_brgy':attrs['BRGY_NAME'].strip(' ').title()})
+
+  # Though included in above mapping, store the original road classification
+  if attrs['RD_CLASS']:
+    tags.update({'or_rdclass':attrs['RD_CLASS'].strip(' ').lower()})
+
 
   return tags

@@ -9,7 +9,7 @@ y_coord         Y coordinate          Centroid, automatically generated
 Shape_Leng      Shape length          Always null, automatically generated
 
 
-The following fields are used:    
+The following fields are used:
 
 Field           Used for                    Reason
 FolderPath      name=FolderPath             Name of the road
@@ -20,7 +20,7 @@ sp_costrev      or_proj_costrev=sp_costrev  Project cost revision
 MUN_NAME        or_mun=MUN_NAME             Municipality
 BRGY_NAME       or_brgy=BRGY_NAME           Barangay
 
-  
+
 To be defined: 
 
 region
