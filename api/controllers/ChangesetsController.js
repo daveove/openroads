@@ -54,7 +54,6 @@ module.exports = {
 
     Changesets.find({ id: changesetID }).exec(function changesetResp(err, changesets) {
       if (err) {
-        sails.log(err);
         return res.badRequest('Encountered error finding changeset');
       }
       else if (!changesets.length) {
@@ -110,7 +109,7 @@ module.exports = {
           var table = 'current_' + model + 's';
           var placeholderID = action.id;
 
-          sails.log('\n\n\n', action);
+          // sails.log.verbose('\n\n\n', action);
 
           if ( model === 'node' || model === 'way' ) {
 
