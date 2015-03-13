@@ -61,12 +61,13 @@ module.exports = {
   //Translate the entity from the XML parser into a proper model
   fromJXEntity: function(entity) {
     var ratio = GeoInfo.ratio;
-    var lat = parseFloat(entity.lat) * ratio | 0;
-    var lon = parseFloat(entity.lon) * ratio | 0;
+    var lat = parseFloat(entity.lat);
+    var lon = parseFloat(entity.lon)
+    console.log('\n\n',lat,lon,'\n\n');
 
     var model = {
-      latitude: lat,
-      longitude: lon,
+      latitude: lat * ratio | 0,
+      longitude: lon * ratio | 0,
       tile: QuadTile.xy2tile(QuadTile.lon2x(lon), QuadTile.lat2y(lat)),
       changeset_id: parseInt(entity.changeset, 10),
       visible: (entity.visible !== 'false' && entity.visible !== false),
@@ -77,6 +78,5 @@ module.exports = {
   },
 
   configureIDs: function(id) {
-    console.log(id);
   },
 };
