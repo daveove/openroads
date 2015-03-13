@@ -32,7 +32,6 @@ module.exports = {
       node_id: Number(entityAttr.id),
       k: entityAttr.k,
       v: entityAttr.v,
-      version: entityAttr.version || 0,
     }
   }
 };
