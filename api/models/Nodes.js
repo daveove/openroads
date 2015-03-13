@@ -63,7 +63,6 @@ module.exports = {
     var ratio = GeoInfo.ratio;
     var lat = parseFloat(entity.lat);
     var lon = parseFloat(entity.lon)
-    console.log('\n\n',lat,lon,'\n\n');
 
     var model = {
       latitude: lat * ratio | 0,

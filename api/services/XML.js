@@ -54,6 +54,7 @@ module.exports = {
       // To enter into the db, we need to do some modifications to the attributes according to the model
       if (elem === 'nd') {
         entity.model = 'way_node';
+        entity.attributes.id = entity.attributes.ref
         entity.attributes['way_id'] = entityID;
         entity.attributes['sequence_id'] = sequenceID;
         sequenceID += 1;
@@ -67,7 +68,7 @@ module.exports = {
 
       // If the entity is "not empty", then we can push it to the array
       if (_.has(entity, 'model')) {
-        entity.id = entity.attributes.id;
+        entity.id = Number(entity.attributes.id);
         // Rename the data attributes according to the model
         entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes);
         entities.push(entity);
