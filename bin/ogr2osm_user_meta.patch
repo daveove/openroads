@@ -1,0 +1,34 @@
+diff --git a/ogr2osm.py b/ogr2osm.py
+index 48bdad5..7651b3f 100755
+--- a/ogr2osm.py
++++ b/ogr2osm.py
+@@ -143,6 +143,14 @@ parser.add_option("--positive-id", dest="positiveID", action="store_true",
+ parser.add_option("--add-version", dest="addVersion", action="store_true",
+                     help=optparse.SUPPRESS_HELP)
+ 
++# Add user attributes. This can cause big problems, so surpress from the help
++parser.add_option("--add-user", dest="addUser", type=str, default=None,
++                    help=optparse.SUPPRESS_HELP)
++
++# Add uid attributes. This can cause big problems, so surpress from the help
++parser.add_option("--add-uid", dest="addUid", type=int, default=None,
++                    help=optparse.SUPPRESS_HELP)
++
+ # Add timestamp attributes. Again, this can cause big problems so surpress the help
+ parser.add_option("--add-timestamp", dest="addTimestamp", action="store_true",
+                     help=optparse.SUPPRESS_HELP)
+@@ -583,7 +591,13 @@ def output():
+         attributes = {}
+         if options.addVersion:
+             attributes.update({'version':'1'})
+-            
++
++        if options.addUser:
++            attributes.update({'user':options.addUser})
++
++        if options.addUid:
++            attributes.update({'uid':str(options.addUid)})
++
+         if options.addTimestamp:
+             attributes.update({'timestamp':datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')})
+             
