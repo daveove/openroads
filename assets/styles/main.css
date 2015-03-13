@@ -1,0 +1,129 @@
+/* Helpers */
+
+.visually-hidden {
+  border: 0 none;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+
+/* Generic styles */
+
+html, body {
+  box-sizing: border-box;
+  color: #564f50;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Links */
+
+a {
+  cursor: pointer;
+  color: #564f50;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #564f50;
+}
+
+a:hover {
+  opacity: 0.64;
+  outline: none;
+}
+
+a:active{
+  outline: none;
+}
+
+
+/* Basic structure */
+
+#site-canvas {
+  height: 100%;
+}
+
+#site-header:after {
+  clear: both;
+  content: " ";
+  display: table;
+}
+
+#site-body {
+  height: calc(100% - 4.5rem); /* 100% - height header */
+  width: 100%;
+}
+
+#main-frame {
+  border: none;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+
+/* Site header */
+
+#site-header {
+  box-shadow: inset 0 -1px 0 0 #ccc;
+  height: 4.5rem;
+}
+
+#site-headline {
+  float: left;
+  padding: 0 0 0.5rem 0.5rem;
+}
+
+#site-title {
+  line-height: 2rem;
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0.5rem 0 0 0;
+}
+
+#tag-line {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#prime-nav {
+  float: right;
+  padding: 0 0.5rem 0.5rem 0;
+}
+
+#prime-nav a {
+  display: block;
+  color: inherit;
+}
+
+.global-menu {
+  list-style: none;
+  overflow: hidden;
+  margin: 0;
+  padding: 1rem 0 0 0;
+  text-align: right;
+}
+
+.global-menu li {
+  float: left;
+  padding-left: 2rem;
+}
+.global-menu a, .global-menu a:visited {
+  color: inherit;
+  display: block;
+  font-weight: bold;
+  line-height: 1.5rem;
+  position: relative; 
+}
+
