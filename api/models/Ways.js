@@ -26,6 +26,8 @@ module.exports = {
 
   tableName: 'current_ways',
 
+  tableName: 'current_ways',
+
   attributes: {
     id: {
       type: 'integer',
@@ -36,7 +38,13 @@ module.exports = {
     },
     changeset_id: {
       type: 'integer',
-      numerical: true,
+      numeric: true,
+      primaryKey: true,
+      autoIncrement: true,
+      index: true
+    },
+    changeset_id: {
+      type: 'integer',
       model: 'changesets'
     },
     timestamp: {
@@ -49,7 +57,8 @@ module.exports = {
     },
     version: {
       type: 'integer',
-      numerical: true
+      numeric: true,
+      index: true
     },
   },
 
@@ -63,6 +72,10 @@ module.exports = {
       visible: (entity.visible !== 'false' && entity.visible !== false),
     };
     return model;
+  },
+
+  indexName: function() {
+    return 'id'
   },
 
   configureIDs: function(id) {

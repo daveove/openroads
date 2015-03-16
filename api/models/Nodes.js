@@ -76,6 +76,10 @@ module.exports = {
     return model;
   },
 
+  indexName: function() {
+    return 'id'
+  },
+  
   configureIDs: function(id) {
   },
 };

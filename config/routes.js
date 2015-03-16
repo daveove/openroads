@@ -80,6 +80,12 @@ module.exports.routes = {
     cors: true
   },
 
+  'post /changeset/:changeset_id/upload': {
+    controller: 'ChangesetsController',
+    action: 'upload',
+    cors: true
+  },
+
 
 
 };

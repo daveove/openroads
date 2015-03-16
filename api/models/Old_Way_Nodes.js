@@ -14,7 +14,8 @@ module.exports = {
   attributes: {
     way_id: {
       type: 'integer',
-      primaryKey: true,
+      primaryKey:true,
+      index: true,
       model: 'ways',
     },
     version: {
@@ -25,9 +26,14 @@ module.exports = {
     },
     node_id: {
       type: 'integer',
+      index: true
     },
   },
 
   // TODO write from way node function
   fromWayNode: function() {},
+  indexName: function() {
+    return 'way_id'
+  }
 };
+

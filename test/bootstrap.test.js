@@ -38,15 +38,18 @@ after(function (done) {
     return Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')})
   })
   .then(Ways.destroy({id: _.pluck(ways, 'id')}))
+  .then(Old_Nodes.destroy({node_id: _.pluck(nodes, 'id')}))
+  .then(Old_Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')}))
+  .then(Old_Ways.destroy({way_id: _.pluck(ways, 'id')}))
   .then(function() {
     Nodes.destroy({changeset_id: 1}).exec(function() {
       sails.log.info('Success')
       console.log();
-      sails.lower(done);
+      sails.lower(done);      
     })
   })
   .catch(function(err) {
-    console.log(err)
+    sails.log.debug(err)
     return done(err)
   })
 

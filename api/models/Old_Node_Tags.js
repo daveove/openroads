@@ -30,5 +30,9 @@ module.exports = {
     },
   },
 
-  fromNodeTag: function() {}
+  fromNodeTag: function() {},
+  indexName: function() {
+    return 'node_id'
+  }
 };
+
