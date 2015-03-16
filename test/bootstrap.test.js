@@ -24,7 +24,8 @@ after(function (done) {
   Nodes.find({changeset_id: 1})
   .then(function(found_nodes) {
     nodes = found_nodes;
-    return Way_Nodes.find({node_id: _.pluck(nodes, 'id')})
+    sails.log.info(_.pluck(nodes, 'id'))
+    return Way_Nodes.find({'node_id': _.pluck(nodes, 'id')})
   })
   .then(function(found_waynodes) {
     waynodes = found_waynodes;
@@ -33,11 +34,17 @@ after(function (done) {
   .then(function(found_ways) {
     ways = found_ways;
     sails.log.info(nodes.length + ' nodes')
-    sails.log.info(waynodes.length + ' way_nodes')   
+    sails.log.info(waynodes.length + ' way_nodes')
     sails.log.info(ways.length + ' ways')
     return Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')})
   })
   .then(Ways.destroy({id: _.pluck(ways, 'id')}))
+  .then(Old_Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')}))
+  .then(Old_Ways.destroy({changeset_id: 1}))
+  //For some reason nodes have to be destroyed this way
+  .then(function() {
+    return Old_Nodes.destroy({changeset_id: 1});
+  })
   .then(function() {
     Nodes.destroy({changeset_id: 1}).exec(function() {
       sails.log.info('Success')
@@ -46,7 +53,7 @@ after(function (done) {
     })
   })
   .catch(function(err) {
-    console.log(err)
+    sails.log.debug(err)
     return done(err)
   })
 

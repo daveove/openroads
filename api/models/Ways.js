@@ -36,7 +36,14 @@ module.exports = {
     },
     changeset_id: {
       type: 'integer',
-      numerical: true,
+      numeric: true,
+      primaryKey: true,
+      autoIncrement: true,
+      index: true
+    },
+    changeset_id: {
+      type: 'integer',
+      numeric: true,
       model: 'changesets'
     },
     timestamp: {
@@ -49,7 +56,8 @@ module.exports = {
     },
     version: {
       type: 'integer',
-      numeric: true
+      numeric: true,
+      index: true
     },
   },
 
@@ -63,6 +71,10 @@ module.exports = {
       visible: (entity.visible !== 'false' && entity.visible !== false),
     };
     return model;
+  },
+
+  indexName: function() {
+    return 'id'
   },
 
   configureIDs: function(id) {

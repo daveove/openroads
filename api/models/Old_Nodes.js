@@ -50,6 +50,8 @@ module.exports = {
 
 
     // TODO write function to create new old node from current node
-
+  },
+  indexName: function() {
+    return 'node_id'
   }
 };

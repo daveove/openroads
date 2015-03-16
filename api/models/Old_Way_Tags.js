@@ -30,4 +30,7 @@ module.exports = {
   },
 
   fromWayTag: function() {},
+  indexName: function() {
+    return 'way_id'
+  }
 };

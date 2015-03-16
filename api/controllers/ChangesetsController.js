@@ -102,6 +102,13 @@ module.exports = {
         }
       });
 
+      var historyModelMap = {
+        'node': sails.models.old_nodes,
+        'way': sails.models.old_ways,
+        'way_node': sails.models.old_way_nodes,
+        'way_tag': sails.models.old_way_tags,
+        'node_tag': sails.models.old_node_tags
+      }
       knex.transaction(function(transaction) {
 
         Promise.each(actions, function(action) {
@@ -110,23 +117,44 @@ module.exports = {
           var placeholderID = action.id;
 
           // sails.log.verbose('\n\n\n', action);
+          if (action.action == 'create' ) {
+            if ( model === 'node' || model === 'way' ) {
 
-          if ( model === 'node' || model === 'way' ) {
+              return transaction(table).insert(action.attributes).returning('id')
+                .then(function(id) {
+                  // it's a way or node, and it has associations
+                  if (map[model] && action.associated) {
+                    var accessor = model + '_id';
+                    _.each(action.associated, function(association) {
+                      association.attributes[accessor] = parseInt(id[0], 10);
+                    });
+                  }
+                  return action;
+                });
 
-            return transaction(table).insert(action.attributes).returning('id')
-              .then(function(id) {
-                // it's a way or node, and it has associations
-                if (map[model] && action.associated) {
-                  var accessor = model + '_id';
-                  _.each(action.associated, function(association) {
-                    association.attributes[accessor] = parseInt(id[0], 10);
-                  });
-                }
-                return action;
-              });
+            } else {
+              return transaction(table).insert(action.attributes);
+            }
+          } else if (action.action == 'modify') {
+            var oldEntity = _.clone(action.attributes, true);
+            sails.log.debug(action);
+            oldEntity[historyModelMap[action.model].indexName()] = action.id //Assign id to oldEntity
 
-          } else {
-            return transaction(table).insert(action.attributes);
+            // Create the old entity, if it fails, throw an error
+            return historyModelMap[action.model]
+              .create(oldEntity)
+              .then(function() {
+
+                // Update version of the model and its attributes in the current_ tables
+                action.attributes.version += 1;
+                sails.log.debug(action)
+                return transaction(table)
+                  .where(action.indexName, '=', action.id)
+                  .update(action.attributes)
+              })
+              .catch(function(err) {
+                throw new Error(err)
+              })
           }
 
         }).then(transaction.commit)
@@ -150,10 +178,10 @@ module.exports = {
         });
 
       }).catch(function(error) {
-        Changesets.destroy({ id: cs.id });
-        sails.log('error: ', error).then(function() {
-          return res.serverError('Could not complete transaction')
-        })
+        Changesets.destroy({ id: cs.id }).then(function() {
+          return res.serverError('Could not complete transaction');
+        });;
+        sails.log('error: ', error)
       });
     });
   }
