@@ -69,7 +69,7 @@ module.exports = {
       // If the entity is "not empty", then we can push it to the array
       if (_.has(entity, 'model')) {
         entity.id = Number(entity.attributes.id);
-        entity.indexname = modelMap[entity.model].indexName();
+        entity.indexName = modelMap[entity.model].indexName();
         // Rename the data attributes according to the model
         entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes);
         entities.push(entity);

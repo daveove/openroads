@@ -134,7 +134,7 @@ module.exports = {
 
             } else {
               return transaction(table).insert(action.attributes);
-            }            
+            }
           } else if (action.action == 'modify') {
             var oldEntity = _.clone(action.attributes, true);
             sails.log.debug(action);
@@ -149,7 +149,7 @@ module.exports = {
                 action.attributes.version += 1;
                 sails.log.debug(action)
                 return transaction(table)
-                  .where(action.indexname, '=', action.id)
+                  .where(action.indexName, '=', action.id)
                   .update(action.attributes)
               })
               .catch(function(err) {
