@@ -47,25 +47,30 @@ module.exports = {
           return res.ok(changeset.id);
         });
       }
+
+      // Save both changeset and comment in a transaction block.
       else {
         changesetComment = {
           k: 'comment',
           v: changesetComment
         };
         knex.transaction(function(transaction) {
-          return transaction
-          .table(Changesets.tableName)
-          .insert(changesetAttributes).returning('id')
-          .then(function(id) {
-              changesetComment.changeset_id = id;
+          knex.table(Changesets.tableName).insert(changesetAttributes).returning('id')
+            .then(function(id) {
+
+              // Returned id becomes the changeset tag's primary key
+              changesetComment.changeset_id = parseInt(id[0], 10);
               return transaction
               .table(Changeset_Tags.tableName)
               .insert(changesetComment)
-              .returning('changeset_id');
+              .returning('changeset_id')
+              .transacting(transaction);
+
+          // Standard knex boilerplate for handling transaction
           }).then(transaction.commit)
           .catch(transaction.rollback);
         }).then(function(id) {
-          return res.ok(id);
+          return res.json({id: id[0]});
         }).catch(function(err) {
           sails.log(err);
           return res.badRequest('Encountered error creating a new changeset and comment tag');
