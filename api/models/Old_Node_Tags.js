@@ -1,5 +1,5 @@
 /**
- * Way_tags.js
+ * Node_tags.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
@@ -7,14 +7,14 @@
 
 module.exports = {
 
-  tableName: 'current_way_tags',
+  tableName: 'node_tags',
 
   attributes: {
-    way_id: {
+    node_id: {
       type: 'integer',
       primaryKey: true,
       autoIncrement: true,
-      model: 'ways'
+      model: 'nodes'
     },
     k: {
       type: 'string',
@@ -24,15 +24,11 @@ module.exports = {
       type: 'string',
       truthy: true
     },
+    version: {
+      type: 'integer',
+      numerical: true
+    },
   },
 
-  //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
-    return {
-      way_id: Number(entityAttr.id),
-      k: entityAttr.k,
-      v: entityAttr.v,
-    }
-  }
+  fromNodeTag: function() {}
 };
-

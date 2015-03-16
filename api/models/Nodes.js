@@ -1,3 +1,4 @@
+
 /**
 * Nodes.js
 *
@@ -9,17 +10,20 @@
 
 module.exports = {
 
+  tableName: 'current_nodes',
+
   attributes: {
-    node_id: {
+    id: {
       type: 'integer',
       autoIncrement: true,
       unique: true,
       primaryKey: true,
+      index: true
     },
     latitude: {
       type: 'integer',
       required: true,
-      numerical: true,
+      numeric: true,
       truthy: true
     },
     longitude: {
@@ -30,7 +34,8 @@ module.exports = {
     },
     changeset_id: {
       type: 'integer',
-      numerical: true
+      numeric: true,
+      model: 'changesets'
     },
     visible: {
       type: 'boolean',
@@ -48,14 +53,29 @@ module.exports = {
     },
     version: {
       type: 'integer',
-      numerical: true,
+      numeric: true,
       required: true
     },
+  },
 
-    // Foreign keys
-    //changeset_id_fkey: {
-      //model: 'changesets'
-    //},
-  }
+  //Translate the entity from the XML parser into a proper model
+  fromJXEntity: function(entity) {
+    var ratio = GeoInfo.ratio;
+    var lat = parseFloat(entity.lat);
+    var lon = parseFloat(entity.lon)
+
+    var model = {
+      latitude: lat * ratio | 0,
+      longitude: lon * ratio | 0,
+      tile: QuadTile.xy2tile(QuadTile.lon2x(lon), QuadTile.lat2y(lat)),
+      changeset_id: parseInt(entity.changeset, 10),
+      visible: (entity.visible !== 'false' && entity.visible !== false),
+      version: parseInt(entity.version, 10) || 0,
+      timestamp: new Date()
+    };
+    return model;
+  },
+
+  configureIDs: function(id) {
+  },
 };
-

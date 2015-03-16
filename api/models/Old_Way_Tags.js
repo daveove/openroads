@@ -7,13 +7,12 @@
 
 module.exports = {
 
-  tableName: 'current_way_tags',
+  tableName: 'way_tags',
 
   attributes: {
     way_id: {
       type: 'integer',
       primaryKey: true,
-      autoIncrement: true,
       model: 'ways'
     },
     k: {
@@ -24,15 +23,11 @@ module.exports = {
       type: 'string',
       truthy: true
     },
+    version: {
+      type: 'integer',
+      numerical: true
+    },
   },
 
-  //Translate the entity from the XML parser into a proper model
-  fromJXEntity: function(entityAttr) {
-    return {
-      way_id: Number(entityAttr.id),
-      k: entityAttr.k,
-      v: entityAttr.v,
-    }
-  }
+  fromWayTag: function() {},
 };
-

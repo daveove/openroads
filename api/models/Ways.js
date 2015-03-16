@@ -24,8 +24,10 @@ module.exports = {
     return ways;
   },
 
+  tableName: 'current_ways',
+
   attributes: {
-    way_id: {
+    id: {
       type: 'integer',
       autoIncrement: true,
       unique: true,
@@ -35,6 +37,7 @@ module.exports = {
     changeset_id: {
       type: 'integer',
       numerical: true,
+      model: 'changesets'
     },
     timestamp: {
       type: 'datetime',
@@ -46,8 +49,24 @@ module.exports = {
     },
     version: {
       type: 'integer',
-      numerical: true
-    }
-  }
+      numeric: true
+    },
+  },
+
+
+  //Translate the entity from the XML parser into a proper model
+  fromJXEntity: function(entity) {
+    var model = {
+      changeset_id: parseInt(entity.changeset, 10),
+      timestamp: new Date(),
+      version: parseInt(entity.version, 10) || 0,
+      visible: (entity.visible !== 'false' && entity.visible !== false),
+    };
+    return model;
+  },
+
+  configureIDs: function(id) {
+    console.log(id);
+  },
 };
 
