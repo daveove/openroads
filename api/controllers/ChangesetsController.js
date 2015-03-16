@@ -117,7 +117,6 @@ module.exports = {
           var placeholderID = action.id;
 
           // sails.log.verbose('\n\n\n', action);
-
           if (action.action == 'create' ) {
             if ( model === 'node' || model === 'way' ) {
 
@@ -135,7 +134,7 @@ module.exports = {
 
             } else {
               return transaction(table).insert(action.attributes);
-            }
+            }            
           } else if (action.action == 'modify') {
             var oldEntity = _.clone(action.attributes, true);
             sails.log.debug(action);
@@ -179,10 +178,10 @@ module.exports = {
         });
 
       }).catch(function(error) {
-        Changesets.destroy({ id: cs.id });
-        sails.log('error: ', error).then(function() {
-          return res.serverError('Could not complete transaction')
-        })
+        Changesets.destroy({ id: cs.id }).then(function() {
+          return res.serverError('Could not complete transaction');
+        });;
+        sails.log('error: ', error)
       });
     });
   }

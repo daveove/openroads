@@ -35,7 +35,7 @@ var xmlCreateWay = '<osmChange version="0.3" generator="iD">' +
   '<delete if-unused="true"/>' +
 '</osmChange>'
 
-var jsonWayCreate = [
+var jsonWayCreate = [ 
   { action: 'create',
     model: 'node',
     id: -7,
