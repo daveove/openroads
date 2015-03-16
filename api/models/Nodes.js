@@ -23,18 +23,18 @@ module.exports = {
     latitude: {
       type: 'integer',
       required: true,
-      numerical: true,
+      numeric: true,
       truthy: true
     },
     longitude: {
       type: 'integer',
       required: true,
-      numerical: true,
+      numeric: true,
       truthy: true
     },
     changeset_id: {
       type: 'integer',
-      numerical: true
+      numeric: true,
       model: 'changesets'
     },
     visible: {
@@ -48,12 +48,12 @@ module.exports = {
     tile: {
       type: 'integer',
       index: true,
-      numerical: true,
+      numeric: true,
       required: true
     },
     version: {
       type: 'integer',
-      numerical: true,
+      numeric: true,
       required: true
     },
   },

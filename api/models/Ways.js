@@ -27,7 +27,7 @@ module.exports = {
   tableName: 'current_ways',
 
   attributes: {
-    way_id: {
+    id: {
       type: 'integer',
       autoIncrement: true,
       unique: true,
