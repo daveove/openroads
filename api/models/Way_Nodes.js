@@ -25,7 +25,8 @@ module.exports = {
     node_id: {
       type: 'integer',
       index: true,
-      numeric: true
+      numeric: true,
+      model: 'nodes'
     },
   },
 
@@ -36,6 +37,9 @@ module.exports = {
       node_id: parseInt(entity.ref, 10),
       sequence_id: parseInt(entity.sequence_id)
     }
+  },
+  indexName: function() {
+    return 'node_id'
   },
 
   configureIDs: function(id) {

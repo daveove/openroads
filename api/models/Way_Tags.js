@@ -33,6 +33,9 @@ module.exports = {
       k: entityAttr.k,
       v: entityAttr.v,
     }
+  },
+  indexName: function() {
+    return 'way_id';
   }
 };
 
