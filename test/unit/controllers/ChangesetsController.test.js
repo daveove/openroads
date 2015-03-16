@@ -1,4 +1,4 @@
-var xmlString = '<osmChange version="0.3" generator="iD">' +
+var createWay = '<osmChange version="0.3" generator="iD">' +
   '<create>' +
     '<node id="-1" lon="124.15472633706449" lat="10.151493406454932" version="0" changeset="1"/>' +
     '<node id="-4" lon="124.15647513734223" lat="10.153431321701245" version="0" changeset="1"/>' +
@@ -15,14 +15,22 @@ var xmlString = '<osmChange version="0.3" generator="iD">' +
 
 var request = require('supertest');
 
+var modifyNode = '<osmChange version="0.3" generator="iD">' +
+'<create/>' +
+'<modify>' +
+'<node id="165562" lon="123.81275264816284" lat="9.626730050553016" version="0" changeset="9"/>' +
+'</modify>' +
+'<delete if-unused="true"/>' +
+'</osmChange>'
+
 describe('ChangesetsController', function() {
   describe('#upload',function() {
-    it('Should upload a changeset, creates 2 nodes and a way with 2 tags', function(done) {
+    it('Creates 2 nodes and a way with 2 tags', function(done) {
       request(sails.hooks.http.app)
         .post('/changesets/upload')
         .set('Accept', 'application/json')
         .query({'changeset_id': 1})
-        .send({'xmlString': xmlString})
+        .send({'xmlString': createWay})
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -31,6 +39,8 @@ describe('ChangesetsController', function() {
           }
           done()
         })
-    })
+    }),
+
+  if('Modifies a node', function())
   })
 })
