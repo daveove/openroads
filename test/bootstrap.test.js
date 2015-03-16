@@ -39,9 +39,12 @@ after(function (done) {
     return Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')})
   })
   .then(Ways.destroy({id: _.pluck(ways, 'id')}))
-  .then(Old_Nodes.destroy({node_id: _.pluck(nodes, 'id')}))
   .then(Old_Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')}))
-  .then(Old_Ways.destroy({way_id: _.pluck(ways, 'id')}))
+  .then(Old_Ways.destroy({changeset_id: 1}))
+  //For some reason nodes have to be destroyed this way
+  .then(function() {
+    return Old_Nodes.destroy({changeset_id: 1});
+  })
   .then(function() {
     Nodes.destroy({changeset_id: 1}).exec(function() {
       sails.log.info('Success')
