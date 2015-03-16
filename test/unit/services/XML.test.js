@@ -1,20 +1,23 @@
 var libxml = require('libxmljs');
 var mock = require('../helpers/XML.readChanges');
+var _ = require('lodash');
+var xmlStrings = require('../helpers/changesetXML');
 
-function rmTimestamps(actionArray) {
+function removeTimestamp(actionArray) {
   return actionArray.map(function(action) {
-    var timestamps = ['timestamp', 'created_at', 'closed_at']
+    var timestamps = ['timestamp', 'created_at', 'closed_at'];
     _.each(timestamps, function(attribute) {
       if (_.has(action.attributes, attribute) ) {
         action.attributes = _.omit(action.attributes, attribute);
       }
-    })
+    });
     return action;
   })
 }
 
 describe('XML', function() {
   describe('#readChanges', function() {
+
     it('Should translate a single node modify', function() {
       rmTimestamps(XML.readChanges(mock.modify.xml))
         .should.be.eql(rmTimestamps(mock.modify.json))
@@ -48,3 +51,4 @@ describe('XML', function() {
   });
 
 });
+
