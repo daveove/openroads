@@ -9,8 +9,6 @@ var Promise = require('bluebird');
 module.exports = {
 
   create: function(req, res) {
-    // TODO save changeset comment along with changeset
-    var changesetComment = req.body.comment;
 
     // Check if User exists; if not, create user.
     // TODO Need a better way to control users here;
@@ -30,19 +28,49 @@ module.exports = {
       var created = new Date();
       var closed = new Date();
       closed.setHours(created.getHours() + 1);
-      var cs = {
+      var changesetAttributes = {
         user_id: userID,
         created_at: created,
         closed_at: closed,
         num_changes: 0
       }
-      Changesets.create(cs, function createChangeset(err, changeset) {
-        if (err) {
+
+      // If there's no changeset comment, use the ORM to save the changeset.
+      // If there is a comment, enter a transaction block to save both.
+      var changesetComment = req.body.comment;
+      if (!changesetComment) {
+        Changesets.create(changesetAttributes, function createChangeset(err, changeset) {
+          if (err) {
+            sails.log(err);
+            return res.badRequest('Encountered error creating a new changeset');
+          }
+          return res.ok(changeset.id);
+        });
+      }
+      else {
+        changesetComment = {
+          k: 'comment',
+          v: changesetComment
+        };
+        knex.transaction(function(transaction) {
+          return transaction
+          .table(Changesets.tableName)
+          .insert(changesetAttributes).returning('id')
+          .then(function(id) {
+              changesetComment.changeset_id = id;
+              return transaction
+              .table(Changeset_Tags.tableName)
+              .insert(changesetComment)
+              .returning('changeset_id');
+          }).then(transaction.commit)
+          .catch(transaction.rollback);
+        }).then(function(id) {
+          return res.ok(id);
+        }).catch(function(err) {
           sails.log(err);
-          return res.badRequest('Encountered error creating a new changeset');
-        }
-        return res.ok(changeset);
-      });
+          return res.badRequest('Encountered error creating a new changeset and comment tag');
+        });
+      }
     });
   },
 
