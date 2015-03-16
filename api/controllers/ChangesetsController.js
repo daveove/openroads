@@ -132,7 +132,6 @@ module.exports = {
         }).then(transaction.commit)
         .catch(transaction.rollback);
       }).then(function() {
-        sails.log('at the end')
 
         // If all goes well, update the changeset
         var bbox = BoundingBox.fromScaledActions(actions).toScaled();
@@ -152,11 +151,10 @@ module.exports = {
 
       }).catch(function(error) {
         Changesets.destroy({ id: cs.id });
-        sails.log('error: ', error)
-
-        return res.serverError('Could not complete transaction')
+        sails.log('error: ', error).then(function() {
+          return res.serverError('Could not complete transaction')
+        })
       });
-
     });
   }
 }

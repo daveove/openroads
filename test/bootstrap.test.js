@@ -33,7 +33,7 @@ after(function (done) {
   .then(function(found_ways) {
     ways = found_ways;
     sails.log.info(nodes.length + ' nodes')
-    sails.log.info(waynodes.length + ' way_nodes')
+    sails.log.info(waynodes.length + ' way_nodes')   
     sails.log.info(ways.length + ' ways')
     return Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')})
   })
@@ -42,7 +42,7 @@ after(function (done) {
     Nodes.destroy({changeset_id: 1}).exec(function() {
       sails.log.info('Success')
       console.log();
-      sails.lower(done);
+      sails.lower(done);      
     })
   })
   .catch(function(err) {

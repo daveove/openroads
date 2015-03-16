@@ -15,7 +15,7 @@ module.exports = {
     way_id: {
       type: 'integer',
       primaryKey: true,
-      numerical: true,
+      numeric: true,
       index: true,
       model: 'ways'
     },
@@ -25,7 +25,7 @@ module.exports = {
     node_id: {
       type: 'integer',
       index: true,
-      numerical: true
+      numeric: true
     },
   },
 

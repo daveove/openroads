@@ -10,7 +10,7 @@ var jsonNodeModify = [
   { action: 'modify',
     model: 'node',
     id: -76703,
-    attributes:
+    attributes: 
      { latitude: 96325393,
        longitude: 1238367622,
        changeset_id: 123,
@@ -81,9 +81,9 @@ var jsonWayCreate = [
   { action: 'create',
     model: 'way_tag',
     id: -4,
-    attributes: {
-      way_id: -4,
-      k: 'name',
+    attributes: { 
+      way_id: -4, 
+      k: 'name', 
       v: 'Fake Street'
     } } ]
 
@@ -95,7 +95,6 @@ function rmTimestamps(actionArray) {
         action.attributes = _.omit(action.attributes, attribute);
       }
     })
-
     return action;
   })
 }

@@ -23,7 +23,7 @@ module.exports = {
     latitude: {
       type: 'integer',
       required: true,
-      numerical: true,
+      numeric: true,
       truthy: true
     },
     longitude: {
@@ -34,7 +34,7 @@ module.exports = {
     },
     changeset_id: {
       type: 'integer',
-      numerical: true
+      numeric: true,
       model: 'changesets'
     },
     visible: {
@@ -53,7 +53,7 @@ module.exports = {
     },
     version: {
       type: 'integer',
-      numerical: true,
+      numeric: true,
       required: true
     },
   },
