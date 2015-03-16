@@ -29,7 +29,7 @@ module.exports = {
     longitude: {
       type: 'integer',
       required: true,
-      numerical: true,
+      numeric: true,
       truthy: true
     },
     changeset_id: {
@@ -48,7 +48,7 @@ module.exports = {
     tile: {
       type: 'integer',
       index: true,
-      numerical: true,
+      numeric: true,
       required: true
     },
     version: {
