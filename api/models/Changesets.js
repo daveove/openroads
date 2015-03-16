@@ -16,6 +16,8 @@ module.exports = {
   // Maximum number of elements allowed in a changeset
   max: 50000,
 
+  tableName: 'changesets',
+
   attributes: {
     id: {
       type: 'integer',
