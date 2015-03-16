@@ -25,7 +25,7 @@ module.exports = {
     parser.on('startElementNS', function(elem, attrs, prefix, uri, namespace) {
 
       // Set the mode
-      if (elem === 'create' || elem === 'modify' || elem === 'destroy') {
+      if (elem === 'create' || elem === 'modify' || elem === 'delete') {
         mode = elem;
         return
       }
