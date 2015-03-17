@@ -25,7 +25,9 @@ var modifyNode = '<osmChange version="0.3" generator="iD">' +
 
 describe('ChangesetsController', function() {
 
-  // TODO write this test.
+  // TODO complete this test once we have a mock test database
+  // https://github.com/developmentseed/openroads/issues/56
+  /*
   describe('#create', function() {
     it('Creates a user and changeset tag', function(done) {
       request(sails.hooks.http.app)
@@ -40,7 +42,7 @@ describe('ChangesetsController', function() {
         });
     });
   });
-
+  */
 
   describe('#upload', function() {
     it('Creates 2 nodes and a way with 2 tags', function(done) {
