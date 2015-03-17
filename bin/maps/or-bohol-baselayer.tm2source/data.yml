@@ -1,0 +1,117 @@
+_prefs: 
+  disabled: []
+  inspector: false
+  mapid: devseed.3cd3b496
+  rev: s-20000549
+  saveCenter: true
+attribution: ''
+center: 
+  - 124.1654
+  - 9.8457
+  - 11
+description: Baselayer for the OR prototype containing CRID, FMR and TRIP data for Bohol
+Layer: 
+  - id: crid-data-bohol
+    Datasource: 
+      file: /home/olaf/projects/openroads-data/crid-data-bohol/export/crid-data-bohol.shp
+      type: shape
+    description: CRID data - Bohol
+    fields: 
+      BRGY_NAME: String
+      MUN_NAME: String
+      RD_CLASS: String
+      RD_COND: String
+      RD_LENGTH: Number
+      RD_TYPE: String
+      ROAD_NAME: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=utm +zone=51 +ellps=WGS84 +units=m +no_defs
+  - id: bohol_fmr_polyline
+    Datasource: 
+      file: /home/olaf/projects/openroads-data/project-roads-bohol/source/bohol_fmr_polyline.shp
+      type: shape
+    description: FMR - Bohol
+    fields: 
+      code: Number
+      FolderPath: String
+      geolink: String
+      id_fmrdp: String
+      leng_diff: Number
+      muni: String
+      Name: String
+      PopupInfo: String
+      province: String
+      region: String
+      road_conn: String
+      Shape_Leng: Number
+      sp_cost: Number
+      sp_costrev: Number
+      sp_eleva: Number
+      sp_length: Number
+      status: String
+      x_coord: Number
+      y_coord: Number
+    properties: 
+      "buffer-size": 8
+    srs: +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs
+  - id: TRIP_contract
+    Datasource: 
+      file: /home/olaf/projects/openroads-data/project-roads-bohol/source/TRIP contract.shp
+      type: shape
+    description: ''
+    fields: 
+      ABC: Number
+      ALLOC: Number
+      ALLOTMENT: Number
+      CATEGORY: String
+      CONTRACTID: String
+      CONTRACTOR: String
+      DBMENT: Number
+      DEO: String
+      DESC_: String
+      FIN_PROG: Number
+      FUNDING: String
+      IMP_OFFICE: String
+      LOCATION: String
+      OBLIGATION: Number
+      PHYS_PROG: Number
+      PROJ_CODE: String
+      PROJ_COST: Number
+      PROJ_ENGR: String
+      PROVINCE: String
+      ROAD_TYPE: String
+      SCOPE: String
+      TARGET_KM: Number
+      YEAR: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs
+  - id: TRIP_national
+    Datasource: 
+      file: /home/olaf/projects/openroads-data/project-roads-bohol/source/TRIP_national.shp
+      type: shape
+    description: ''
+    fields: 
+      ADDTL_2012: Number
+      Descriptio: String
+      GAA2012: String
+      GAA2013: Number
+      GAA2014: Number
+      LENGTH: Number
+      MUN: String
+      NAME: String
+      PROJ_CODE: String
+      PROVINCE: String
+      REGION: String
+      ROAD_CLASS: String
+      TDA: String
+      TOTAL_ROAD: Number
+      TOUR_SPOT: String
+      WORK_SCOPE: String
+    properties: 
+      "buffer-size": 8
+    srs: +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs
+maxzoom: 15
+minzoom: 0
+name: Baselayer OR prototype
