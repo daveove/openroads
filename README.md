@@ -6,6 +6,8 @@ This is the main repo for the Philippines OpenRoads project containing the API. 
 
 [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads)
 
+[![Build Status](https://magnum.travis-ci.com/developmentseed/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads)
+
 ## Contributing
 
 ### Installing dependencies
