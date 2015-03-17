@@ -1,3 +1,5 @@
+var request = require('supertest');
+
 var createWay = '<osmChange version="0.3" generator="iD">' +
   '<create>' +
     '<node id="-1" lon="124.15472633706449" lat="10.151493406454932" version="0" changeset="1"/>' +
@@ -13,10 +15,8 @@ var createWay = '<osmChange version="0.3" generator="iD">' +
   '<delete if-unused="true"/>' +
 '</osmChange>'
 
-var request = require('supertest');
-
 var modifyNode = function(id) {
-  return '<osmChange version="0.3" generator="iD">' + 
+  return '<osmChange version="0.3" generator="iD">' +
   '<create/>' +
   '<modify>' +
     '<node id="'+ id +'" lon="123.81275264816284" lat="9.626730050553016" version="1" changeset="1"/>' +
@@ -26,7 +26,7 @@ var modifyNode = function(id) {
 }
 
 var deleteNode = function(id) {
-  return '<osmChange version="0.3" generator="iD">' + 
+  return '<osmChange version="0.3" generator="iD">' +
   '<create/>' +
   '<modify/>' +
   '<delete if-unused="true">' +
