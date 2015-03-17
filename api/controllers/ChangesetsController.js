@@ -214,7 +214,7 @@ module.exports = {
             sails.log(err);
             return res.serverError('Could not update changeset')
           }
-          return res.ok({
+          return res.json({
             changeset: changeset,
             actions: actions
           });
