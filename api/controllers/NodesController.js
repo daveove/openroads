@@ -14,9 +14,10 @@ module.exports = {
     if (!nodeID || isNaN(nodeID)) {
       return res.badRequest('Node ID must be a non-zero number');
     }
-    Nodes.find({ node_id: nodeID }).exec(function nodeResp(err, nodes) {
+    Nodes.find({ id : nodeID }).exec(function nodeResp(err, nodes) {
       if (err) {
-        return res.badRequest(err);
+        sails.log.debug(err);
+        return res.serverError(err);
       }
       else if (!nodes.length || !nodes[0].visible) {
         res.set('Content-Type', 'text/xml');
@@ -27,9 +28,5 @@ module.exports = {
       res.set('Content-type', 'text/xml');
       return res.send(xmlDoc.toString());
     });
-
-
   }
-
-
 };

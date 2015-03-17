@@ -15,7 +15,7 @@ module.exports = {
       var nodesInWay = [];
       for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
         var wayNode = wayNodes[i];
-        if (wayNode.way_id === way.way_id) {
+        if (wayNode.way_id === way.id) {
           nodesInWay.push(wayNode);
         }
       }
