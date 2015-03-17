@@ -4,6 +4,8 @@ This is the main repo for the Philippines OpenRoads project containing the API. 
 - [OR network editor](https://github.com/developmentseed/openroads-iD) - fork of iD
 - [OR verification platform](https://github.com/developmentseed/openroads-tofix) - fork of To-fix
 
+[![Build Status](https://magnum.travis-ci.com/developmentseed/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads)
+
 ## Contributing
 
 ### Installing dependencies
