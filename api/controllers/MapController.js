@@ -23,7 +23,11 @@ module.exports = {
     var tiles = QuadTile.tilesForArea(bbox);
 
     // Query the node table for nodes with this tile.
-    Nodes.find({ tile: tiles }).exec(function nodeResp(err, nodes) {
+    Nodes.find({
+      tile: tiles,
+      visible: true
+    }).exec(function nodeResp(err, nodes) {
+
       if (err) {
         sails.log.debug(err);
         return res.serverError(err);
@@ -55,15 +59,21 @@ module.exports = {
 
             // First query returns the actual ways.
             ways: function(cb) {
-              Ways.find({ id: wayIDs }).exec(cb);
+              Ways.find({
+                id: wayIDs,
+                visible: true
+              }).exec(cb);
             },
 
             // Second query hits way_nodes table again
             // to get any *nodes* that aren't in our BBox,
             // but are part of a way.
             wayNodes: function(cb) {
-              Way_Nodes.find({ way_id: wayIDs }).exec(cb);
+              Way_Nodes.find({
+                way_id: wayIDs
+              }).exec(cb);
             }
+
           }, function wayResp(err, resp) {
             if (err) {
               sails.log.debug(err);
@@ -77,7 +87,10 @@ module.exports = {
 
             // Need to hit the Nodes server again.
             if (missingNodes.length) {
-              Nodes.find({ id: missingNodes }).exec(function missingNodeResp(err, missingNodes) {
+              Nodes.find({
+                id: missingNodes,
+                visible: true
+              }).exec(function missingNodeResp(err, missingNodes) {
                 if (err) {
                   sails.log.debug(err);
                   return res.serverError(err);
