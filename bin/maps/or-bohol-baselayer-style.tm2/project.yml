@@ -1,0 +1,26 @@
+_prefs: 
+  mapid: devseed.ff2e6e69
+  saveCenter: true
+_properties: {}
+attribution: ''
+bounds: 
+  - -180
+  - -85.0511
+  - 180
+  - 85.0511
+center: 
+  - 124.0047
+  - 9.7673
+  - 11
+description: Baselayer for the OpenRoads prototype containing CRID and FMR data for Bohol
+format: "png8:m=h"
+interactivity_layer: ''
+layers: null
+maxzoom: 19
+minzoom: 0
+name: OR prototype baselayer
+source: "mapbox:///mapbox.satellite,devseed.3cd3b496"
+styles: 
+  - style.mss
+  - roads.mss
+template: ''
