@@ -10,11 +10,12 @@ module.exports = {
     if (commaCount === 3) {
       var bbox = new BoundingBox.fromCoordinates(paramString.split(','));
       if (bbox.error) {
+        sails.log.debug(bbox.error);
         return res.badRequest(bbox.error);
       }
     }
     else {
-      return res.badRequest(bbox.error);
+      return res.badRequest('Query must contain a valid bounding box');
     }
 
     // Calculate the tiles within this bounding box.
@@ -24,7 +25,8 @@ module.exports = {
     // Query the node table for nodes with this tile.
     Nodes.find({ tile: tiles }).exec(function nodeResp(err, nodes) {
       if (err) {
-        return res.badRequest(err);
+        sails.log.debug(err);
+        return res.serverError(err);
       }
 
       // If no nodes are found, just return an empty XML document.
@@ -41,7 +43,8 @@ module.exports = {
         // Query the way_nodes endpoint, returning every wayNode containing our nodes.
         Way_Nodes.find({ node_id: nodeIDs }).exec(function wayNodeResp(err, wayNodes) {
           if (err) {
-            return res.badRequest(err);
+            sails.log.debug(err);
+            return res.serverError(err);
           }
 
           // Get a unique list of way ID's
@@ -63,8 +66,10 @@ module.exports = {
             }
           }, function wayResp(err, resp) {
             if (err) {
-              return res.badRequest(err);
+              sails.log.debug(err);
+              return res.serverError(err);
             }
+
             var allNodeIDs = _(resp.wayNodes).pluck('node_id').uniq().value();
             var missingNodes = _.difference(allNodeIDs, nodeIDs);
             var ways = Ways.attachNodeIDs(resp.ways, resp.wayNodes);
@@ -73,6 +78,10 @@ module.exports = {
             // Need to hit the Nodes server again.
             if (missingNodes.length) {
               Nodes.find({ id: missingNodes }).exec(function missingNodeResp(err, missingNodes) {
+                if (err) {
+                  sails.log.debug(err);
+                  return res.serverError(err);
+                }
                 nodes = nodes.concat(missingNodes);
                 xmlDoc = XML.write({bbox: bbox, nodes: nodes, ways: ways});
                 res.set('Content-Type', 'text/xml');
@@ -92,22 +101,3 @@ module.exports = {
     });
   }
 };
-
-
-function attachNodeIDs(obj) {
-  var ways = obj.ways;
-  var wayNodes = obj.wayNodes;
-  // For each way, attach every node it contains using the wayNodes server response.
-  for (var j = 0, jj = ways.length; j < jj; ++j) {
-    var way = ways[j];
-    var nodesInWay = [];
-    for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
-      var wayNode = wayNodes[i];
-      if (wayNode.way_id === way.id) {
-        nodesInWay.push(wayNode);
-      }
-    }
-    way.nodes = nodesInWay;
-  }
-  return ways;
-}
