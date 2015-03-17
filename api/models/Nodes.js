@@ -81,28 +81,29 @@ module.exports = {
   },
 
   canBeDeleted: function(node_id) {
-    return Way_Nodes.find({node_id: parseInt(node_id)})
-      .then(function(waynodes) {
-        if (waynodes) {
-          return Ways.find({id: _.pluck(waynodes, 'way_id')})  
-                  .then(function(ways) {
-                  var visible = _.chain(ways)
-                    .pluck('visible')
-                    .reduce(function(curr, val) { return curr && val}, true)
-                    .value()
-                  sails.log.debug(visible)
-                  return visible
-                })
-        } else {
-          return true
-        }
-      })
-      .catch(function(err) {
-        sails.log.debug(err)          
-        throw new Error(err)      
-      })
-  },
-
-  configureIDs: function(id) {
-  },
+    // No need to call parseInt on node_id, as that's already handled upstream.
+    return Way_Nodes.find({ node_id: node_id })
+    .then(function wayNodeResp(wayNodes) {
+      // If this node belongs to a way, check to see if
+      // any of those ways are visible, aka not deleted yet.
+      // Return false if this node is still part of an existing way.
+      if (wayNodes) {
+        return Ways.find({id: _.pluck(wayNodes, 'way_id')})
+        .then(function(ways) {
+          var visible = _.chain(ways)
+          .pluck('visible')
+          .reduce(function(curr, val) { return curr && val}, true)
+          .value();
+          sails.log.debug(visible);
+          return visible;
+        })
+      } else {
+        return true;
+      }
+    })
+    .catch(function(err) {
+      sails.log.debug(err);
+      throw new Error(err);
+    })
+  }
 };

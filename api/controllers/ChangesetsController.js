@@ -102,92 +102,105 @@ module.exports = {
         }
       });
 
-      var modelMap = {
+      var currentModels = {
         'node': sails.models.nodes,
         'way': sails.models.ways,
-      }
+      };
 
-      var historyModelMap = {
+      var oldModels = {
         'node': sails.models.old_nodes,
         'way': sails.models.old_ways,
         'way_node': sails.models.old_way_nodes,
         'way_tag': sails.models.old_way_tags,
         'node_tag': sails.models.old_node_tags
-      }
+      };
 
       knex.transaction(function(transaction) {
         return Promise.each(actions, function(action) {
           var model = action.model;
-          var table = 'current_' + model + 's';
-          var hist_table = model + 's';
+          var currentTable = 'current_' + model + 's';
+          var oldTable = model + 's';
           var placeholderID = action.id;
 
           // sails.log.verbose('\n\n\n', action);
           if (action.action === 'create' ) {
+
+            // For ways and nodes, re-map associations.
             if ( model === 'node' || model === 'way' ) {
 
-              return transaction(table).insert(action.attributes).returning('id')
-                .then(function(id) {
-                  // it's a way or node, and it has associations
-                  if (map[model] && action.associated) {
-                    var accessor = model + '_id';
-                    action.id = parseInt(id[0], 10);
-                    _.each(action.associated, function(association) {
-                      association.attributes[accessor] = parseInt(id[0], 10);
-                    });
-                  }
-                  return action;
-                });
+              return transaction(currentTable).insert(action.attributes).returning('id')
+              .then(function(id) {
+                // It's a way or node, and it has associations
+                // Remap the placeholder ID to the new, auto-generated ID from database.
+                if (map[model] && action.associated) {
+                  var accessor = model + '_id';
+                  var newID = parseInt(id[0], 10);
+                  _.each(action.associated, function(association) {
+                    association.attributes[accessor] = newID;
+                  });
+                  action.id = newID;
+                }
+                return action;
+              });
 
+            // For way_nodes, way_tags, and node_tags, just do a straight insert.
+            // As there are no associations to re-map.
             } else {
-              return transaction(table).insert(action.attributes);
+              return transaction(currentTable).insert(action.attributes);
             }
+
           } else if (action.action === 'modify') {
+            // Save the original entity in the old entity (nodes, ways, etc) tables.
             var oldEntity = _.clone(action.attributes, true);
-            oldEntity[historyModelMap[model].indexName()] = action.id //Assign id to oldEntity
+
+            // Assign ID to oldEntity
+            // indexName returns the primary key column name on the model.
+            oldEntity[oldModels[model].indexName()] = action.id
 
             // Create the old entity, if it fails, throw an error
+            return transaction(oldTable)
+            .insert(oldEntity)
+            .then(function() {
 
-            return transaction(hist_table)
-                    .insert(oldEntity)
-                    .then(function() {
-
-                    // Update version of the model and its attributes in the current_ tables
-                    action.attributes.version += 1;
-                    return transaction(table)
-                      .where(action.indexName, '=', action.id)
-                      .update(action.attributes)
-                  })
-                  .catch(function(err) {
-                    sails.log.debug(err)
-                    throw new Error(err)
+              // Update version of the model and its attributes in the current_ tables
+              action.attributes.version += 1;
+              return transaction(currentTable)
+              .where(action.indexName, '=', action.id)
+              .update(action.attributes)
             })
+            .catch(function(err) {
+              sails.log.debug(err)
+              throw new Error(err)
+            })
+
           } else if (action.action === 'delete') {
             if (model === 'node' || model === 'way') {
-              return modelMap[model].canBeDeleted(action.id)
+              return currentModels[model].canBeDeleted(action.id)
               .then(function(yes) {
                 if (yes) {
                   action.attributes.visible = false;
-                  return transaction(table)
-                          .where(action.indexName, '=', action.id)
-                          .update(action.attributes)
-
+                  return transaction(currentTable)
+                  .where(action.indexName, '=', action.id)
+                  .update(action.attributes);
                 } else {
-                  sails.log.debug("Couldn't delete entity")
-                  throw new Error("Couldn't delete entity")
+                  sails.log.debug("Couldn't delete entity");
+                  throw new Error("Couldn't delete entity");
                 }
               })
               .catch(function(err) {
                 sails.log.debug('Error in visibility check function');
-                throw new Error('err')
+                throw new Error('err');
               })
             } else {
-              sails.log.debug('not a node/way delete')
-              return action
+              sails.log.debug('not a node/way delete');
+              return action;
             }
           }
         })
-      }).then(function() {
+      })
+
+      .then(function() {
+
         // If all goes well, update the changeset
         var bbox = BoundingBox.fromScaledActions(actions).toScaled();
         Changesets.update({ id: cs.id }, {
@@ -211,7 +224,7 @@ module.exports = {
         return Changesets.destroy({ id: cs.id }).then(function() {
           return res.serverError('Could not complete transaction');
         });;
-        
+
       });
     });
   }

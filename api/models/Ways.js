@@ -82,10 +82,6 @@ module.exports = {
     return new Promise(function(fullfill, reject) {
       fullfill(true)
     })
-  },
-
-  configureIDs: function(id) {
-    console.log(id);
-  },
+  }
 };
 
