@@ -102,6 +102,11 @@ module.exports = {
         }
       });
 
+      var modelMap = {
+        'node': sails.models.nodes,
+        'way': sails.models.ways,
+      }
+
       var historyModelMap = {
         'node': sails.models.old_nodes,
         'way': sails.models.old_ways,
@@ -109,15 +114,16 @@ module.exports = {
         'way_tag': sails.models.old_way_tags,
         'node_tag': sails.models.old_node_tags
       }
-      knex.transaction(function(transaction) {
 
-        Promise.each(actions, function(action) {
+      knex.transaction(function(transaction) {
+        return Promise.each(actions, function(action) {
           var model = action.model;
           var table = 'current_' + model + 's';
+          var hist_table = model + 's';
           var placeholderID = action.id;
 
           // sails.log.verbose('\n\n\n', action);
-          if (action.action == 'create' ) {
+          if (action.action === 'create' ) {
             if ( model === 'node' || model === 'way' ) {
 
               return transaction(table).insert(action.attributes).returning('id')
@@ -125,6 +131,7 @@ module.exports = {
                   // it's a way or node, and it has associations
                   if (map[model] && action.associated) {
                     var accessor = model + '_id';
+                    action.id = parseInt(id[0], 10);
                     _.each(action.associated, function(association) {
                       association.attributes[accessor] = parseInt(id[0], 10);
                     });
@@ -135,32 +142,52 @@ module.exports = {
             } else {
               return transaction(table).insert(action.attributes);
             }
-          } else if (action.action == 'modify') {
+          } else if (action.action === 'modify') {
             var oldEntity = _.clone(action.attributes, true);
-            sails.log.debug(action);
-            oldEntity[historyModelMap[action.model].indexName()] = action.id //Assign id to oldEntity
+            oldEntity[historyModelMap[model].indexName()] = action.id //Assign id to oldEntity
 
             // Create the old entity, if it fails, throw an error
-            return historyModelMap[action.model]
-              .create(oldEntity)
-              .then(function() {
 
-                // Update version of the model and its attributes in the current_ tables
-                action.attributes.version += 1;
-                sails.log.debug(action)
-                return transaction(table)
-                  .where(action.indexName, '=', action.id)
-                  .update(action.attributes)
+            return transaction(hist_table)
+                    .insert(oldEntity)
+                    .then(function() {
+
+                    // Update version of the model and its attributes in the current_ tables
+                    action.attributes.version += 1;
+                    return transaction(table)
+                      .where(action.indexName, '=', action.id)
+                      .update(action.attributes)
+                  })
+                  .catch(function(err) {
+                    sails.log.debug(err)
+                    throw new Error(err)
+            })
+          } else if (action.action === 'delete') {
+            if (model === 'node' || model === 'way') {
+              return modelMap[model].canBeDeleted(action.id)
+              .then(function(yes) {
+                if (yes) {
+                  action.attributes.visible = false;
+                  return transaction(table)
+                          .where(action.indexName, '=', action.id)
+                          .update(action.attributes)
+
+                } else {
+                  sails.log.debug("Couldn't delete entity")
+                  throw new Error("Couldn't delete entity")
+                }
               })
               .catch(function(err) {
-                throw new Error(err)
+                sails.log.debug('Error in visibility check function');
+                throw new Error('err')
               })
+            } else {
+              sails.log.debug('not a node/way delete')
+              return action
+            }
           }
-
-        }).then(transaction.commit)
-        .catch(transaction.rollback);
+        })
       }).then(function() {
-
         // If all goes well, update the changeset
         var bbox = BoundingBox.fromScaledActions(actions).toScaled();
         Changesets.update({ id: cs.id }, {
@@ -174,14 +201,17 @@ module.exports = {
             sails.log(err);
             return res.serverError('Could not update changeset')
           }
-          return res.ok(changeset);
+          return res.ok({
+            changeset: changeset,
+            actions: actions
+          });
         });
 
       }).catch(function(error) {
-        Changesets.destroy({ id: cs.id }).then(function() {
+        return Changesets.destroy({ id: cs.id }).then(function() {
           return res.serverError('Could not complete transaction');
         });;
-        sails.log('error: ', error)
+        
       });
     });
   }

@@ -33,9 +33,6 @@ after(function (done) {
   })
   .then(function(found_ways) {
     ways = found_ways;
-    sails.log.info(nodes.length + ' nodes')
-    sails.log.info(waynodes.length + ' way_nodes')
-    sails.log.info(ways.length + ' ways')
     return Way_Nodes.destroy({node_id: _.pluck(waynodes, 'node_id')})
   })
   .then(Ways.destroy({id: _.pluck(ways, 'id')}))

@@ -80,6 +80,29 @@ module.exports = {
     return 'id'
   },
 
+  canBeDeleted: function(node_id) {
+    return Way_Nodes.find({node_id: parseInt(node_id)})
+      .then(function(waynodes) {
+        if (waynodes) {
+          return Ways.find({id: _.pluck(waynodes, 'way_id')})  
+                  .then(function(ways) {
+                  var visible = _.chain(ways)
+                    .pluck('visible')
+                    .reduce(function(curr, val) { return curr && val}, true)
+                    .value()
+                  sails.log.debug(visible)
+                  return visible
+                })
+        } else {
+          return true
+        }
+      })
+      .catch(function(err) {
+        sails.log.debug(err)          
+        throw new Error(err)      
+      })
+  },
+
   configureIDs: function(id) {
   },
 };
