@@ -57,7 +57,7 @@ module.exports.routes = {
     controller: 'ChangesetsController',
     action: 'upload',
     cors: true
-  }
+  },
 
   // Bounding box query
   'get /xml/map': {
@@ -79,6 +79,6 @@ module.exports.routes = {
     action: 'full',
     skipAssets: true,
     cors: true
-  },
+  }
 
 };
