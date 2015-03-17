@@ -25,7 +25,7 @@ module.exports = {
     parser.on('startElementNS', function(elem, attrs, prefix, uri, namespace) {
 
       // Set the mode
-      if (elem === 'create' || elem === 'modify' || elem === 'destroy') {
+      if (elem === 'create' || elem === 'modify' || elem === 'delete') {
         mode = elem;
         return
       }
@@ -68,8 +68,15 @@ module.exports = {
 
       // If the entity is "not empty", then we can push it to the array
       if (_.has(entity, 'model')) {
-        entity.id = Number(entity.attributes.id);
+
+        // Set id on entity and not attributes.
+        // This is because there's a lot of logic around whether to use the ID,
+        // or whether we let the database create one.
+        entity.id = parseInt(entity.attributes.id, 10);
+        delete entity.attributes.id;
+
         entity.indexName = modelMap[entity.model].indexName();
+
         // Rename the data attributes according to the model
         entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes);
         entities.push(entity);

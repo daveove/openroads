@@ -15,15 +15,28 @@ var createWay = '<osmChange version="0.3" generator="iD">' +
 
 var request = require('supertest');
 
-var modifyNode = '<osmChange version="0.3" generator="iD">' + 
+var modifyNode = function(id) {
+  return '<osmChange version="0.3" generator="iD">' + 
   '<create/>' +
   '<modify>' +
-    '<node id="164932" lon="123.81275264816284" lat="9.626730050553016" version="0" changeset="1"/>' +
+    '<node id="'+ id +'" lon="123.81275264816284" lat="9.626730050553016" version="1" changeset="1"/>' +
   '</modify>' +
   '<delete if-unused="true"/>' +
 '</osmChange>'
+}
+
+var deleteNode = function(id) {
+  return '<osmChange version="0.3" generator="iD">' + 
+  '<create/>' +
+  '<modify/>' +
+  '<delete if-unused="true">' +
+      '<node id="'+ id + '" lon="123.81275264816284" lat="9.626730050553016" version="0" changeset="1"/>' +
+  '</delete>' +
+'</osmChange>'
+}
 
 describe('ChangesetsController', function() {
+  var id = -1;
   describe('#upload',function() {
     it('Creates 2 nodes and a way with 2 tags', function(done) {
       request(sails.hooks.http.app)
@@ -37,6 +50,8 @@ describe('ChangesetsController', function() {
             sails.log.debug(res.error.text)
             return done(err)
           }
+          //set the id for later tests;
+          id = parseInt(JSON.parse(res.text).actions[0].id)
           done()
         })
     }),
@@ -45,7 +60,22 @@ describe('ChangesetsController', function() {
       .post('/changesets/upload')
       .set('Accept', 'application/json')
       .query({'changeset_id': 1})
-      .send({'xmlString': modifyNode})
+      .send({'xmlString': modifyNode(id)})
+      .expect(200)
+      .end(function(err, res) {
+        if (err) {
+          sails.log.debug(res.error.text)
+          return done(err)
+        }
+        done()
+      })
+    })
+    it('Deletes a node', function(done) {
+      request(sails.hooks.http.app)
+      .post('/changesets/upload')
+      .set('Accept', 'application/json')
+      .query({'changeset_id': 1})
+      .send({'xmlString': deleteNode(id)})
       .expect(200)
       .end(function(err, res) {
         if (err) {

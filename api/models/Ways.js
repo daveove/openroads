@@ -77,8 +77,11 @@ module.exports = {
     return 'id'
   },
 
-  configureIDs: function(id) {
-    console.log(id);
-  },
+  canBeDeleted: function(way_id) {
+    // TODO add relations support
+    return new Promise(function(fullfill, reject) {
+      fullfill(true)
+    })
+  }
 };
 
