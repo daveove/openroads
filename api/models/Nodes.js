@@ -94,7 +94,6 @@ module.exports = {
           .pluck('visible')
           .reduce(function(curr, val) { return curr && val}, true)
           .value();
-          sails.log.debug(visible);
           return visible;
         })
       } else {

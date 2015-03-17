@@ -7,6 +7,8 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var Promise = require('bluebird');
+
 module.exports = {
   attachNodeIDs: function(ways, wayNodes) {
     // For each way, attach every node it contains using the wayNodes server response.
