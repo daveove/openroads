@@ -70,7 +70,7 @@ module.exports = {
       tile: QuadTile.xy2tile(QuadTile.lon2x(lon), QuadTile.lat2y(lat)),
       changeset_id: parseInt(entity.changeset, 10),
       visible: (entity.visible !== 'false' && entity.visible !== false),
-      version: parseInt(entity.version, 10) || 0,
+      version: parseInt(entity.version, 10) || 1,
       timestamp: new Date()
     };
     return model;

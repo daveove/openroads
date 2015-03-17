@@ -67,7 +67,7 @@ module.exports = {
     var model = {
       changeset_id: parseInt(entity.changeset, 10),
       timestamp: new Date(),
-      version: parseInt(entity.version, 10) || 0,
+      version: parseInt(entity.version, 10) || 1,
       visible: (entity.visible !== 'false' && entity.visible !== false),
     };
     return model;
