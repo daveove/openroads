@@ -73,8 +73,6 @@ module.exports = {
         // This is because there's a lot of logic around whether to use the ID,
         // or whether we let the database create one.
         entity.id = parseInt(entity.attributes.id, 10);
-        delete entity.attributes.id;
-
         entity.indexName = modelMap[entity.model].indexName();
 
         // Rename the data attributes according to the model
