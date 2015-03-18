@@ -13,7 +13,6 @@ module.exports = {
     node_id: {
       type: 'integer',
       primaryKey: true,
-      autoIncrement: true,
       model: 'nodes'
     },
     k: {

@@ -2,7 +2,7 @@ var _ = require('lodash');
 var knex = require('knex')({
   client: 'pg',
   connection: sails.config.connections.osmPostgreSQL.url,
-  debug: 'true'
+  debug: false
 });
 var Promise = require('bluebird');
 
@@ -23,7 +23,7 @@ module.exports = {
       creation_time: new Date()
     }, function(err, user) {
       if (err) {
-        sails.log(err);
+        sails.log.debug(err);
         return res.badRequest('Encountered error creating or finding user');
       }
       // Fill an object with changeset attributes
@@ -38,7 +38,7 @@ module.exports = {
       }
       Changesets.create(cs, function createChangeset(err, changeset) {
         if (err) {
-          sails.log(err);
+          sails.log.debug(err);
           return res.badRequest('Encountered error creating a new changeset');
         }
         return res.ok(changeset);
@@ -54,6 +54,7 @@ module.exports = {
 
     Changesets.find({ id: changesetID }).exec(function changesetResp(err, changesets) {
       if (err) {
+        sails.log.debug(err);
         return res.badRequest('Encountered error finding changeset');
       }
       else if (!changesets.length) {
@@ -211,16 +212,17 @@ module.exports = {
           closed_at: new Date()
         }).exec(function updateChangeset(err, changeset) {
           if (err) {
-            sails.log(err);
+            sails.log.debug(err);
             return res.serverError('Could not update changeset')
           }
-          return res.ok({
+          return res.json({
             changeset: changeset,
             actions: actions
           });
         });
 
-      }).catch(function(error) {
+      }).catch(function(err) {
+        sails.log.debug(err);
         return Changesets.destroy({ id: cs.id }).then(function() {
           return res.serverError('Could not complete transaction');
         });;
