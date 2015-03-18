@@ -10,22 +10,6 @@
 var Promise = require('bluebird');
 
 module.exports = {
-  attachNodeIDs: function(ways, wayNodes) {
-    // For each way, attach every node it contains using the wayNodes server response.
-    for (var j = 0, jj = ways.length; j < jj; ++j) {
-      var way = ways[j];
-      var nodesInWay = [];
-      for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
-        var wayNode = wayNodes[i];
-        if (wayNode.way_id === way.id) {
-          nodesInWay.push(wayNode);
-        }
-      }
-      way.nodes = nodesInWay;
-    }
-    return ways;
-  },
-
   tableName: 'current_ways',
 
   attributes: {
@@ -84,6 +68,21 @@ module.exports = {
     return new Promise(function(fullfill, reject) {
       fullfill(true)
     })
-  }
-};
+  },
 
+  attachNodeIDs: function(ways, wayNodes) {
+    // For each way, attach every node it contains using the wayNodes server response.
+    for (var j = 0, jj = ways.length; j < jj; ++j) {
+      var way = ways[j];
+      var nodesInWay = [];
+      for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
+        var wayNode = wayNodes[i];
+        if (wayNode.way_id === way.id) {
+          nodesInWay.push(wayNode);
+        }
+      }
+      way.nodes = nodesInWay;
+    }
+    return ways;
+  },
+};
