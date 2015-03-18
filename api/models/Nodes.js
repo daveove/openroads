@@ -104,5 +104,30 @@ module.exports = {
       sails.log.debug(err);
       throw new Error(err);
     })
+  },
+
+  // Attach a list of tags to a list of entities
+  // by creating a mapping of entities by their id.
+  withTags: function(entities, tags, accessor) {
+    if (!tags.length) {
+      return entities;
+    }
+    var map = {};
+    for(var i = 0, ii = entities.length; i < ii; ++i) {
+      var entity = entities[i];
+      map[entity.id] = entity;
+    }
+    for(i = 0, ii = tags.length; i < ii; ++i) {
+      var tag = tags[i];
+      var entity = map[tag[accessor]];
+      if (entity) {
+        if (entity.tags === undefined) {
+          entity.tags = [];
+        }
+        entity.tags.push(tag);
+      }
+    }
+    return entities;
   }
+
 };
