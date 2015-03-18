@@ -14,7 +14,17 @@ module.exports = {
     if (!nodeID || isNaN(nodeID)) {
       return res.badRequest('Node ID must be a non-zero number');
     }
-    Nodes.find({ id : nodeID }).exec(function nodeResp(err, nodes) {
+
+    async.parallel({
+      nodes: function(cb) {
+        Nodes.find({ id : nodeID }).exec(cb);
+      },
+      nodeTags: function(cb) {
+        Node_Tags.find({ node_id: nodeID }).exec(cb);
+      }
+    }, function nodeResp(err, resp) {
+      var nodes = resp.nodes;
+      var nodeTags = resp.nodeTags;
       if (err) {
         sails.log.debug(err);
         return res.serverError(err);
@@ -24,7 +34,7 @@ module.exports = {
         return res.send('<osm version="' + Api.version + '" generator="'
                         + Api.generator + '"></osm>');
       }
-      var xmlDoc = XML.write({ nodes: nodes });
+      var xmlDoc = XML.write({ nodes: Nodes.withTags(nodes, nodeTags, 'node_id') });
       res.set('Content-type', 'text/xml');
       return res.send(xmlDoc.toString());
     });
