@@ -2,7 +2,7 @@ var _ = require('lodash');
 var knex = require('knex')({
   client: 'pg',
   connection: sails.config.connections.osmPostgreSQL.url,
-  debug: 'true'
+  debug: false
 });
 var Promise = require('bluebird');
 
