@@ -9,8 +9,6 @@ var Promise = require('bluebird');
 module.exports = {
 
   create: function(req, res) {
-    // TODO save changeset comment along with changeset
-    var changesetComment = req.body.comment;
 
     // Check if User exists; if not, create user.
     // TODO Need a better way to control users here;
@@ -30,19 +28,54 @@ module.exports = {
       var created = new Date();
       var closed = new Date();
       closed.setHours(created.getHours() + 1);
-      var cs = {
+      var changesetAttributes = {
         user_id: userID,
         created_at: created,
         closed_at: closed,
         num_changes: 0
       }
-      Changesets.create(cs, function createChangeset(err, changeset) {
-        if (err) {
-          sails.log.debug(err);
-          return res.badRequest('Encountered error creating a new changeset');
-        }
-        return res.ok(changeset);
-      });
+
+      // If there's no changeset comment, use the ORM to save the changeset.
+      // If there is a comment, enter a transaction block to save both.
+      var changesetComment = req.body.comment;
+      if (!changesetComment) {
+        Changesets.create(changesetAttributes, function createChangeset(err, changeset) {
+          if (err) {
+            sails.log(err);
+            return res.badRequest('Encountered error creating a new changeset');
+          }
+          return res.ok(changeset.id);
+        });
+      }
+
+      // Save both changeset and comment in a transaction block.
+      else {
+        changesetComment = {
+          k: 'comment',
+          v: changesetComment
+        };
+        knex.transaction(function(transaction) {
+          knex.table(Changesets.tableName).insert(changesetAttributes).returning('id')
+          .then(function(id) {
+
+            // Returned id becomes the changeset tag's primary key
+            changesetComment.changeset_id = parseInt(id[0], 10);
+            return transaction
+            .table(Changeset_Tags.tableName)
+            .insert(changesetComment)
+            .returning('changeset_id')
+            .transacting(transaction);
+
+            // Standard knex boilerplate for handling transaction
+          }).then(transaction.commit)
+          .catch(transaction.rollback);
+        }).then(function(id) {
+          return res.json({id: id[0]});
+        }).catch(function(err) {
+          sails.log(err);
+          return res.badRequest('Encountered error creating a new changeset and comment tag');
+        });
+      }
     });
   },
 
@@ -144,8 +177,8 @@ module.exports = {
                 return action;
               });
 
-            // For way_nodes, way_tags, and node_tags, just do a straight insert.
-            // As there are no associations to re-map.
+              // For way_nodes, way_tags, and node_tags, just do a straight insert.
+              // As there are no associations to re-map.
             } else {
               return transaction(currentTable).insert(action.attributes);
             }

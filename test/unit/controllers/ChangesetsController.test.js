@@ -1,49 +1,36 @@
 var request = require('supertest');
-
-var createWay = '<osmChange version="0.3" generator="iD">' +
-  '<create>' +
-    '<node id="-1" lon="124.15472633706449" lat="10.151493406454932" version="0" changeset="1"/>' +
-    '<node id="-4" lon="124.15647513734223" lat="10.153431321701245" version="0" changeset="1"/>' +
-    '<way id="-1" version="0" changeset="1">' +
-      '<nd ref="-1"/>' +
-      '<nd ref="-4"/>' +
-      '<tag k="highway" v="tertiary"/>' +
-      '<tag k="name" v="Common Road Name"/>' +
-    '</way>' +
-  '</create>' +
-  '<modify/>' +
-  '<delete if-unused="true"/>' +
-'</osmChange>'
-
-var modifyNode = function(id) {
-  return '<osmChange version="0.3" generator="iD">' +
-  '<create/>' +
-  '<modify>' +
-    '<node id="'+ id +'" lon="123.81275264816284" lat="9.626730050553016" version="1" changeset="1"/>' +
-  '</modify>' +
-  '<delete if-unused="true"/>' +
-'</osmChange>'
-}
-
-var deleteNode = function(id) {
-  return '<osmChange version="0.3" generator="iD">' +
-  '<create/>' +
-  '<modify/>' +
-  '<delete if-unused="true">' +
-      '<node id="'+ id + '" lon="123.81275264816284" lat="9.626730050553016" version="0" changeset="1"/>' +
-  '</delete>' +
-'</osmChange>'
-}
+var mocks = require('../helpers/changesets');
 
 describe('ChangesetsController', function() {
   var id = -1;
+
+  describe('#create', function() {
+
+    // TODO complete this test once we have a mock DB.
+    /*
+    describe('#create', function() {
+      it('Creates a user and changeset tag', function(done) {
+        request(sails.hooks.http.app)
+        .post('/changesets/create')
+        .set('Accept', 'application/json')
+        .send({
+        })
+        .expect(200)
+        .end(function(err, res) {
+        });
+      });
+    });
+    */
+
+  });
+
   describe('#upload',function() {
     it('Creates 2 nodes and a way with 2 tags', function(done) {
       request(sails.hooks.http.app)
         .post('/changesets/upload')
         .set('Accept', 'application/json')
         .query({'changeset_id': 1})
-        .send({'xmlString': createWay})
+        .send({'xmlString': mocks.createWay})
         .expect(200)
         .end(function(err, res) {
           if (err) {
@@ -54,13 +41,14 @@ describe('ChangesetsController', function() {
           id = parseInt(JSON.parse(res.text).actions[0].id)
           done()
         })
-    }),
+    });
+
     it('Modifies a node', function(done) {
       request(sails.hooks.http.app)
       .post('/changesets/upload')
       .set('Accept', 'application/json')
       .query({'changeset_id': 1})
-      .send({'xmlString': modifyNode(id)})
+      .send({'xmlString': mocks.modifyNode(id)})
       .expect(200)
       .end(function(err, res) {
         if (err) {
@@ -69,13 +57,14 @@ describe('ChangesetsController', function() {
         }
         done()
       })
-    })
+    });
+
     it('Deletes a node', function(done) {
       request(sails.hooks.http.app)
       .post('/changesets/upload')
       .set('Accept', 'application/json')
       .query({'changeset_id': 1})
-      .send({'xmlString': deleteNode(id)})
+      .send({'xmlString': mocks.deleteNode(id)})
       .expect(200)
       .end(function(err, res) {
         if (err) {
@@ -84,6 +73,7 @@ describe('ChangesetsController', function() {
         }
         done()
       })
-    })
+    });
+
   })
 })

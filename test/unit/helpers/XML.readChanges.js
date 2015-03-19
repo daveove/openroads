@@ -4,7 +4,7 @@ var xmlNodeModify = '<osmChange version="0.3" generator="iD">' +
     '<node id="-76703" lon="123.83676223498107" lat="9.632539331799256" version="1" changeset="123"/>' +
   '</modify>'  +
   '<delete if-unused="true"/>' +
-'</osmChange>'
+'</osmChange>';
 
 var jsonNodeModify = [{
   action: 'modify',
@@ -119,8 +119,13 @@ var jsonCreateWay = [{
 }];
 
 module.exports = {
-  xmlNodeModify: xmlNodeModify,
-  jsonNodeModify: jsonNodeModify,
-  xmlCreateWay: xmlCreateWay,
-  jsonCreateWay: jsonCreateWay
+  modify: {
+    xml: xmlNodeModify,
+    json: jsonNodeModify
+  },
+  create: {
+    xml: xmlCreateWay,
+    json: jsonCreateWay
+  }
 };
+
