@@ -16,12 +16,12 @@ function rmTimestamps(actionArray) {
 describe('XML', function() {
   describe('#readChanges', function() {
     it('Should translate a single node modify', function() {
-      rmTimestamps(XML.readChanges(mock.xmlNodeModify))
-        .should.be.eql(rmTimestamps(mock.jsonNodeModify))
+      rmTimestamps(XML.readChanges(mock.modify.xml))
+        .should.be.eql(rmTimestamps(mock.modify.json))
     }),
     it('Should translate a way creation', function() {
-      rmTimestamps(XML.readChanges(mock.xmlCreateWay))
-        .should.be.eql(rmTimestamps(mock.jsonCreateWay))
+      rmTimestamps(XML.readChanges(mock.create.xml))
+        .should.be.eql(rmTimestamps(mock.create.json))
     })
   });
 
