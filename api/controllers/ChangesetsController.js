@@ -158,6 +158,8 @@ module.exports = {
           var oldTable = model + 's';
           var placeholderID = action.id;
 
+          numChanges += 1;
+
           // sails.log.verbose('\n\n\n', action);
           if (action.action === 'create' ) {
 
@@ -232,8 +234,6 @@ module.exports = {
               return action;
             }
           }
-
-          numChanges += 1;
         })
       })
 
