@@ -16,7 +16,7 @@ description: Baselayer for the OpenRoads prototype containing CRID and FMR data 
 format: "png8:m=h"
 interactivity_layer: ''
 layers: null
-maxzoom: 19
+maxzoom: 16
 minzoom: 0
 name: OR prototype baselayer
 source: "mapbox:///mapbox.satellite,devseed.3cd3b496"
