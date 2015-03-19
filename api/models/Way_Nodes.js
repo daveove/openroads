@@ -38,12 +38,9 @@ module.exports = {
       sequence_id: parseInt(entity.sequence_id)
     }
   },
+
   indexName: function() {
     return 'node_id'
-  },
-
-  configureIDs: function(id) {
-    console.log(id);
-  },
+  }
 };
 

@@ -7,23 +7,9 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
-module.exports = {
-  attachNodeIDs: function(ways, wayNodes) {
-    // For each way, attach every node it contains using the wayNodes server response.
-    for (var j = 0, jj = ways.length; j < jj; ++j) {
-      var way = ways[j];
-      var nodesInWay = [];
-      for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
-        var wayNode = wayNodes[i];
-        if (wayNode.way_id === way.way_id) {
-          nodesInWay.push(wayNode);
-        }
-      }
-      way.nodes = nodesInWay;
-    }
-    return ways;
-  },
+var Promise = require('bluebird');
 
+module.exports = {
   tableName: 'current_ways',
 
   attributes: {
@@ -67,7 +53,7 @@ module.exports = {
     var model = {
       changeset_id: parseInt(entity.changeset, 10),
       timestamp: new Date(),
-      version: parseInt(entity.version, 10) || 0,
+      version: parseInt(entity.version, 10) || 1,
       visible: (entity.visible !== 'false' && entity.visible !== false),
     };
     return model;
@@ -77,8 +63,26 @@ module.exports = {
     return 'id'
   },
 
-  configureIDs: function(id) {
-    console.log(id);
+  canBeDeleted: function(way_id) {
+    // TODO add relations support
+    return new Promise(function(fullfill, reject) {
+      fullfill(true)
+    })
+  },
+
+  attachNodeIDs: function(ways, wayNodes) {
+    // For each way, attach every node it contains using the wayNodes server response.
+    for (var j = 0, jj = ways.length; j < jj; ++j) {
+      var way = ways[j];
+      var nodesInWay = [];
+      for (var i = 0, ii = wayNodes.length; i < ii; ++i) {
+        var wayNode = wayNodes[i];
+        if (wayNode.way_id === way.id) {
+          nodesInWay.push(wayNode);
+        }
+      }
+      way.nodes = nodesInWay;
+    }
+    return ways;
   },
 };
-

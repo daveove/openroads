@@ -1,4 +1,6 @@
 # OpenRoads
+[![Build Status](https://magnum.travis-ci.com/developmentseed/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads)
+
 This is the main repo for the Philippines OpenRoads project containing the API. Other projects part of this project:
 
 - [OR network editor](https://github.com/developmentseed/openroads-iD) - fork of iD
@@ -28,13 +30,9 @@ Before running the server, you will need to modify `config/local.js` to include 
 module.exports.connections = {
   osmPostgreSQL: {
     adapter: 'sails-postgresql',
-    host: 'YOUR_HOST',
-    port: 5434,
-    user: 'USER_NAME',
-    password: 'PASSWORD',
-    database: 'DB_NAME',
-    ssl: false,
+    url: 'postgres://USER:PASSWORD@HOST:POST/DATABASE',
     pool: false,
+    ssl: false
   }
 }
 ```

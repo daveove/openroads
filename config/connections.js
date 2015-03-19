@@ -31,4 +31,11 @@ module.exports.connections = {
   /* DEVELOPMENT uses a local postgresql adapter, specified in local.js
    * TODO point to a production adapter
    */
+    /* DEVELOPMENT uses a local postgresql adapter, specified in local.js
+   * TODO point to a production adapter
+   */
+   osmPostgreSQL: {
+    adapter: 'sails-postgresql',
+    url: process.env.DATABASE_URL,
+    }
 };

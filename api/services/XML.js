@@ -1,4 +1,5 @@
 var libxml = require('libxmljs');
+var _ = require('lodash');
 var info = require('./GeoInfo');
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
     parser.on('startElementNS', function(elem, attrs, prefix, uri, namespace) {
 
       // Set the mode
-      if (elem === 'create' || elem === 'modify' || elem === 'destroy') {
+      if (elem === 'create' || elem === 'modify' || elem === 'delete') {
         mode = elem;
         return
       }
@@ -68,8 +69,13 @@ module.exports = {
 
       // If the entity is "not empty", then we can push it to the array
       if (_.has(entity, 'model')) {
-        entity.id = Number(entity.attributes.id);
+
+        // Set id on entity and not attributes.
+        // This is because there's a lot of logic around whether to use the ID,
+        // or whether we let the database create one.
+        entity.id = parseInt(entity.attributes.id, 10);
         entity.indexName = modelMap[entity.model].indexName();
+
         // Rename the data attributes according to the model
         entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes);
         entities.push(entity);
@@ -112,7 +118,7 @@ module.exports = {
     if (nodes) {
       for (var i = 0, ii = nodes.length; i < ii; ++i) {
         var node = nodes[i];
-        root.node('node').attr({
+        var nodeEl = root.node('node').attr({
           id: node.id,
           visible: node.visible,
           version: node.version,
@@ -123,6 +129,17 @@ module.exports = {
           lat: node.latitude / info.ratio,
           lon: node.longitude / info.ratio
         });
+
+        // attach tags
+        var tags = node.tags;
+        if (tags && _.isArray(tags) && tags.length) {
+          for (var m = 0, mm = tags.length; m < mm; ++m) {
+            var tag = tags[m];
+            if (tag.k && tag.v) {
+              nodeEl.node('tag').attr({ k: tag.k, v: tag.v });
+            }
+          }
+        }
       }
     }
 
@@ -148,10 +165,21 @@ module.exports = {
         }
 
         // Attach a node ref for each node, as long as it exists and it's id isn't '0'.
-        for(var k = 0, kk = orderedNodes.length; k < kk; ++k) {
+        for (var k = 0, kk = orderedNodes.length; k < kk; ++k) {
           var wayNode = orderedNodes[k];
           if (wayNode && wayNode !== '0') {
             wayEl.node('nd').attr({ ref: wayNode });
+          }
+        }
+
+        // Attach way tags
+        var tags = way.tags;
+        if (tags && _.isArray(tags) && tags.length) {
+          for (var m = 0, mm = tags.length; m < mm; ++m) {
+            var tag = tags[m];
+            if (tag.k && tag.v) {
+              wayEl.node('tag').attr({ k: tag.k, v: tag.v });
+            }
           }
         }
       }
