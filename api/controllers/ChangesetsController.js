@@ -94,6 +94,8 @@ module.exports = {
         return res.badRequest('Not a valid changeset');
       }
       var cs = changesets[0];
+      // Keep track of the number of changes this upload operation is doing.
+      var numChanges = parseInt(cs.num_changes, 10) || 0;
       var xml = req.body.xmlString;
       try {
         var actions = XML.readChanges(xml);
@@ -155,6 +157,8 @@ module.exports = {
           var currentTable = 'current_' + model + 's';
           var oldTable = model + 's';
           var placeholderID = action.id;
+
+          numChanges += 1;
 
           // sails.log.verbose('\n\n\n', action);
           if (action.action === 'create' ) {
@@ -234,7 +238,6 @@ module.exports = {
       })
 
       .then(function() {
-
         // If all goes well, update the changeset
         var bbox = BoundingBox.fromScaledActions(actions).toScaled();
         Changesets.update({ id: cs.id }, {
@@ -242,7 +245,8 @@ module.exports = {
           min_lat: bbox.minLat,
           max_lon: bbox.maxLon,
           max_lat: bbox.maxLat,
-          closed_at: new Date()
+          closed_at: new Date(),
+          num_changes: numChanges
         }).exec(function updateChangeset(err, changeset) {
           if (err) {
             sails.log.debug(err);
