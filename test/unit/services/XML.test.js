@@ -34,11 +34,6 @@ describe.only('XML', function() {
     it('Should translate a deletion changeset', simpleChangeset('delete'))
 
     // -----------
-    // Long strings
-    // ------------
-
-
-    // -----------
     // Exactly translated
     // -----------
 
