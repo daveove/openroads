@@ -11,10 +11,20 @@ module.exports = {
   create: function(req, res) {
 
     // Check if User exists; if not, create user.
-    // TODO Need a better way to control users here;
-    // this is strictly for beta purposes.
     var userName = req.body.user;
-    var userID = req.body.uid;
+    var userID = parseInt(req.body.uid, 10);
+
+    // Create user attributes now, to have more fine-grained control
+    // in case of errors.
+    var userAttributes = {
+      display_name: userName || 'Openroads User',
+      creation_time: new Date()
+    }
+
+    if (userID && !isNaN(userID)) {
+      userAttributes.id = userID;
+    }
+
     Users.findOrCreate({ id: userID }, {
       id: userID,
       display_name: userName,
@@ -230,7 +240,7 @@ module.exports = {
                 throw new Error('err');
               })
             } else {
-              sails.log.debug('not a node/way delete');
+              sails.log.debug(model, 'not a node/way delete');
               return action;
             }
           }
