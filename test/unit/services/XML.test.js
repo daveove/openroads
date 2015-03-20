@@ -1,9 +1,8 @@
 var libxml = require('libxmljs');
 var mock = require('../helpers/XML.readChanges');
 var _ = require('lodash');
-var xmlStrings = require('../helpers/changesetXML');
 
-function removeTimestamp(actionArray) {
+function rmTimestamps(actionArray) {
   return actionArray.map(function(action) {
     var timestamps = ['timestamp', 'created_at', 'closed_at'];
     _.each(timestamps, function(attribute) {
@@ -15,8 +14,33 @@ function removeTimestamp(actionArray) {
   })
 }
 
-describe('XML', function() {
+describe.only('XML', function() {
   describe('#readChanges', function() {
+
+    // -----------
+    // Simple strings
+    // ------------
+    function simpleChangeset(mode) {
+      return function() {
+        return _.chain(XML.readChanges(mock.simple[mode]))
+        .pluck('action')
+        .uniq().value()
+        .should.be.eql([mode])
+        .and.have.lengthOf(1)
+    }}
+
+    it('Should translate a creation changeset', simpleChangeset('create')),
+    it('Should translate a modification changeset', simpleChangeset('modify')),
+    it('Should translate a deletion changeset', simpleChangeset('delete'))
+
+    // -----------
+    // Long strings
+    // ------------
+
+
+    // -----------
+    // Exactly translated
+    // -----------
 
     it('Should translate a single node modify', function() {
       rmTimestamps(XML.readChanges(mock.modify.xml))
