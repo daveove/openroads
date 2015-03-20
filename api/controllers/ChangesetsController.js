@@ -189,6 +189,8 @@ module.exports = {
 
           } else if (action.action === 'modify') {
             // Save the original entity in the old entity (nodes, ways, etc) tables.
+            // Update version of the model
+            action.attributes.version += 1;
             var oldEntity = _.clone(action.attributes, true);
 
             // Assign ID to oldEntity
@@ -200,8 +202,6 @@ module.exports = {
             .insert(oldEntity)
             .then(function() {
 
-              // Update version of the model and its attributes in the current_ tables
-              action.attributes.version += 1;
               return transaction(currentTable)
               .where(action.indexName, '=', action.id)
               .update(action.attributes)
