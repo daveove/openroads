@@ -75,6 +75,7 @@ module.exports = {
     };
     return model;
   },
+
   canBeDeleted: function(node_id) {
     // No need to call parseInt on node_id, as that's already handled upstream.
     return Way_Nodes.find({ node_id: node_id })
