@@ -1,20 +1,42 @@
 var libxml = require('libxmljs');
 var mock = require('../helpers/XML.readChanges');
+var _ = require('lodash');
 
 function rmTimestamps(actionArray) {
   return actionArray.map(function(action) {
-    var timestamps = ['timestamp', 'created_at', 'closed_at']
+    var timestamps = ['timestamp', 'created_at', 'closed_at'];
     _.each(timestamps, function(attribute) {
       if (_.has(action.attributes, attribute) ) {
         action.attributes = _.omit(action.attributes, attribute);
       }
-    })
+    });
     return action;
   })
 }
 
-describe('XML', function() {
+describe.only('XML', function() {
   describe('#readChanges', function() {
+
+    // -----------
+    // Simple strings
+    // ------------
+    function simpleChangeset(mode) {
+      return function() {
+        return _.chain(XML.readChanges(mock.simple[mode]))
+        .pluck('action')
+        .uniq().value()
+        .should.be.eql([mode])
+        .and.have.lengthOf(1)
+    }}
+
+    it('Should translate a creation changeset', simpleChangeset('create')),
+    it('Should translate a modification changeset', simpleChangeset('modify')),
+    it('Should translate a deletion changeset', simpleChangeset('delete'))
+
+    // -----------
+    // Exactly translated
+    // -----------
+
     it('Should translate a single node modify', function() {
       rmTimestamps(XML.readChanges(mock.modify.xml))
         .should.be.eql(rmTimestamps(mock.modify.json))
@@ -48,3 +70,4 @@ describe('XML', function() {
   });
 
 });
+

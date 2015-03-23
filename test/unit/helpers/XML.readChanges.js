@@ -118,7 +118,16 @@ var jsonCreateWay = [{
   }
 }];
 
+var simpleCreate = '<osmChange version="0.3" generator="iD"><create><node id="-1" lon="123.80713073806761" lat="9.623874044911773" version="0" changeset="7"><tag k="leisure" v="park"/><tag k="name" v="New park"/></node></create><modify/><delete if-unused="true"/></osmChange>';
+var simpleModify = '<osmChange version="0.3" generator="iD"><create/><modify><node id="165562" lon="123.81275264816284" lat="9.626730050553016" version="0" changeset="9"/></modify><delete if-unused="true"/></osmChange>';
+var simpleDestroy = '<osmChange version="0.3" generator="iD"><create/><modify/><delete if-unused="true"><way id="165530" version="0" changeset="10"><nd ref="165562"/><nd ref="165563"/></way><node id="165562" lon="123.8126079" lat="9.6264056" version="0" changeset="10"/><node id="165563" lon="123.8171569" lat="9.6242266" version="0" changeset="10"/></delete></osmChange>';
+
 module.exports = {
+  simple: {
+    create: simpleCreate,
+    modify: simpleModify,
+    delete: simpleDestroy
+  },
   modify: {
     xml: xmlNodeModify,
     json: jsonNodeModify
