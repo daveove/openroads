@@ -6,6 +6,33 @@ var knex = require('knex')({
 });
 var Promise = require('bluebird');
 
+var newOldEntity = {
+  node: function(n) {
+    var node = _.clone(n.attributes);
+    node.node_id = n.id;
+    return node;
+  },
+  way: function(w) {
+    var way = _.clone(w.attributes);
+    way.way_id = w.id;
+    return way;
+  },
+  node_tag: function(nt) {
+    var nodeTag = _.clone(nt.attributes);
+    nodeTag.node_id = wt.id;
+  },
+  way_tag: function(wt) {
+    var wayTag = _.clone(wt.attributes);
+    wayTag.way_id = wt.id
+    return wayTag;
+  },
+  way_node: function(wn) {
+    var wayNode = _.clone(wn.attributes);
+    wayNode.version = wn.version;
+    return wayNode;
+  }
+};
+
 module.exports = {
 
   create: function(req, res) {
@@ -139,16 +166,8 @@ module.exports = {
       });
 
       var currentModels = {
-        'node': sails.models.nodes,
-        'way': sails.models.ways,
-      };
-
-      var oldModels = {
-        'node': sails.models.old_nodes,
-        'way': sails.models.old_ways,
-        'way_node': sails.models.old_way_nodes,
-        'way_tag': sails.models.old_way_tags,
-        'node_tag': sails.models.old_node_tags
+        node: sails.models.nodes,
+        way: sails.models.ways,
       };
 
       knex.transaction(function(transaction) {
@@ -157,6 +176,7 @@ module.exports = {
           var currentTable = 'current_' + model + 's';
           var oldTable = model + 's';
           var placeholderID = action.id;
+          var attributes = action.attributes;
 
           numChanges += 1;
 
@@ -166,7 +186,7 @@ module.exports = {
             // For ways and nodes, re-map associations.
             if ( model === 'node' || model === 'way' ) {
 
-              return transaction(currentTable).insert(action.attributes).returning('id')
+              return transaction(currentTable).insert(attributes).returning('id')
               .then(function(id) {
                 // It's a way or node, and it has associations
                 // Remap the placeholder ID to the new, auto-generated ID from database.
@@ -184,51 +204,79 @@ module.exports = {
               // For way_nodes, way_tags, and node_tags, just do a straight insert.
               // As there are no associations to re-map.
             } else {
-              return transaction(currentTable).insert(action.attributes);
+              return transaction(currentTable).insert(attributes);
             }
 
           } else if (action.action === 'modify') {
-            // Save the original entity in the old entity (nodes, ways, etc) tables.
-            // Update version of the model
-            action.attributes.version += 1;
-            var oldEntity = _.clone(action.attributes, true);
+            console.log(model);
 
-            // Assign ID to oldEntity
-            // indexName returns the primary key column name on the model.
-            oldEntity[oldModels[model].indexName()] = action.id
+            // Save the original entity in the old entity (nodes, ways, etc) tables.
+
+            // Update version of the model
+            // If there's a version, increment it.
+            if (attributes.version && !isNaN(attributes.version)) {
+              attributes.version += 1;
+            }
+
+            // If there are associations and versions, write the versions
+            // on those associations. Later we will check for them.
+            if (action.associated && attributes.version) {
+              _.each(action.associated, function(association) {
+                association.version = attributes.version;
+              });
+            }
+
+            if (model === 'way_node') {
+              action.id = attributes.node_id;
+            }
+
+            var oldEntity = newOldEntity[model](action);
 
             // Create the old entity, if it fails, throw an error
             return transaction(oldTable)
             .insert(oldEntity)
             .then(function() {
 
+              console.log(action);
               return transaction(currentTable)
-              .where(action.indexName, '=', action.id)
-              .update(action.attributes)
+              .where(action.key, '=', action.id)
+              .update(attributes)
+
+              .catch(function(err) {
+                sails.log.debug(err);
+              });
             })
+
             .catch(function(err) {
               sails.log.debug(err)
               throw new Error(err)
             })
+          }
 
-          } else if (action.action === 'delete') {
+          else if (action.action === 'delete') {
+
+            sails.log.debug('\n\n', 'delete', action);
+
             if (model === 'node' || model === 'way') {
               return currentModels[model].canBeDeleted(action.id)
+
               .then(function(yes) {
                 if (yes) {
-                  action.attributes.visible = false;
+                  attributes.visible = false;
                   return transaction(currentTable)
-                  .where(action.indexName, '=', action.id)
-                  .update(action.attributes);
+                  .where(action.key, '=', action.id)
+                  .update(attributes);
                 } else {
                   sails.log.debug("Couldn't delete entity");
                   throw new Error("Couldn't delete entity");
                 }
               })
+
               .catch(function(err) {
                 sails.log.debug('Error in visibility check function');
                 throw new Error('err');
               })
+
             } else {
               sails.log.debug('not a node/way delete');
               return action;
