@@ -37,10 +37,6 @@ module.exports = {
       node_id: parseInt(entity.ref, 10),
       sequence_id: parseInt(entity.sequence_id)
     }
-  },
-
-  indexName: function() {
-    return 'node_id'
   }
 };
 
