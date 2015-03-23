@@ -8,16 +8,24 @@ module.exports = {
     var entity = {};
     var sequenceID = 0;
     var entityID = 0;
-    var parentElem;
+    var parent;
     var mode;
 
     var modelMap = {
-      'node': sails.models.nodes,
-      'way': sails.models.ways,
-      'way_node': sails.models.way_nodes,
-      'way_tag': sails.models.way_tags,
-      'node_tag': sails.models.node_tags
-    }
+      node: sails.models.nodes,
+      node_tag: sails.models.node_tags,
+      way: sails.models.ways,
+      way_tag: sails.models.way_tags,
+      way_node: sails.models.way_nodes
+    };
+
+    var keyNames = {
+      node: 'id',
+      node_tag: 'node_id',
+      way: 'id',
+      way_tag: 'way_id',
+      way_node: 'node_id'
+    };
 
     // Start a streaming parser. On each tag, we check what it is and create entities
     var parser = new libxml.SaxParser();
@@ -48,22 +56,22 @@ module.exports = {
 
       // If we're going to process a way_node or a tag, we need to save the parent ID
       if (elem === 'node' || elem === 'way') {
-        parentElem = elem;
+        parent = elem;
         entityID = entity.attributes.id;
       }
 
       // To enter into the db, we need to do some modifications to the attributes according to the model
       if (elem === 'nd') {
         entity.model = 'way_node';
-        entity.attributes.id = entity.attributes.ref
-        entity.attributes['way_id'] = entityID;
-        entity.attributes['sequence_id'] = sequenceID;
+        entity.attributes.node_id = entity.attributes.ref
+        entity.attributes.way_id = entityID;
+        entity.attributes.sequence_id = sequenceID;
         sequenceID += 1;
       }
 
       // For tags, we have to add the parent's id
       if (elem === 'tag') {
-        entity.model = parentElem + '_tag';
+        entity.model = parent + '_tag';
         entity.attributes['id'] = entityID;
       }
 
@@ -74,7 +82,7 @@ module.exports = {
         // This is because there's a lot of logic around whether to use the ID,
         // or whether we let the database create one.
         entity.id = parseInt(entity.attributes.id, 10);
-        entity.indexName = modelMap[entity.model].indexName();
+        entity.key = keyNames[entity.model];
 
         // Rename the data attributes according to the model
         entity.attributes = modelMap[entity.model].fromJXEntity(entity.attributes);
