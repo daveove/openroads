@@ -34,8 +34,5 @@ module.exports = {
       v: entityAttr.v,
     }
   },
-  indexName: function() {
-    return 'way_id';
-  }
 };
 
