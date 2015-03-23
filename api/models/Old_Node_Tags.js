@@ -28,10 +28,5 @@ module.exports = {
       type: 'integer',
       numerical: true
     },
-  },
-
-  fromNodeTag: function() {},
-  indexName: function() {
-    return 'node_id'
   }
 };

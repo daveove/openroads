@@ -36,9 +36,7 @@ after(function (done) {
   .then(function() {
     return Old_Nodes.destroy({changeset_id: 1});
   })
-  .then(function() {
-    return Nodes.destroy({changeset_id: 1})  
-  })
+  .then(Nodes.destroy({changeset_id: 1}))
   .then(function() {
     function success() {
       sails.log.info('Success')

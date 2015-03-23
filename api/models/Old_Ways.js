@@ -33,10 +33,5 @@ module.exports = {
     visible: {
       type: 'boolean'
     }
-  },
-
-  fromWay: function() {},
-  indexName: function() {
-    return 'way_id'
   }
 };

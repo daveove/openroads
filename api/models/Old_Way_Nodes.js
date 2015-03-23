@@ -29,10 +29,4 @@ module.exports = {
       index: true
     },
   },
-
-  // TODO write from way node function
-  fromWayNode: function() {},
-  indexName: function() {
-    return 'way_id'
-  }
 };
