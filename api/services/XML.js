@@ -63,7 +63,8 @@ module.exports = {
       // To enter into the db, we need to do some modifications to the attributes according to the model
       if (elem === 'nd') {
         entity.model = 'way_node';
-        entity.attributes.node_id = entity.attributes.ref
+        entity.attributes.id = entity.attributes.ref;
+        entity.attributes.node_id = entity.attributes.ref;
         entity.attributes.way_id = entityID;
         entity.attributes.sequence_id = sequenceID;
         sequenceID += 1;

@@ -10,7 +10,7 @@ var jsonNodeModify = [{
   action: 'modify',
   model: 'node',
   id: -76703,
-  indexName: 'id',
+  key: 'id',
   attributes: {
     latitude: 96325393,
     longitude: 1238367622,
@@ -41,7 +41,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'node',
   id: -7,
-  indexName: 'id',
+  key: 'id',
   attributes: {
     latitude: 96322008,
     longitude: 1238362150,
@@ -55,7 +55,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'node',
   id: -10,
-  indexName: 'id',
+  key: 'id',
   attributes: {
     latitude: 96356914,
     longitude: 1238402705,
@@ -69,7 +69,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'way',
   id: -4,
-  indexName: 'id',
+  key: 'id',
   attributes: {
     changeset_id: 123,
     timestamp: new Date(),
@@ -80,7 +80,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'way_node',
   id: -7,
-  indexName: 'node_id',
+  key: 'node_id',
   attributes: {
     way_id: -4,
     node_id: -7,
@@ -90,7 +90,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'way_node',
   id: -10,
-  indexName: 'node_id',
+  key: 'node_id',
   attributes: {
     way_id: -4,
     node_id: -10,
@@ -100,7 +100,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'way_tag',
   id: -4,
-  indexName: 'way_id',
+  key: 'way_id',
   attributes: {
     way_id: -4,
     k: 'highway',
@@ -110,7 +110,7 @@ var jsonCreateWay = [{
   action: 'create',
   model: 'way_tag',
   id: -4,
-  indexName: 'way_id',
+  key: 'way_id',
   attributes: {
     way_id: -4,
     k: 'name',
