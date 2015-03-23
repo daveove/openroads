@@ -14,7 +14,7 @@ function rmTimestamps(actionArray) {
   })
 }
 
-describe.only('XML', function() {
+describe('XML', function() {
   describe('#readChanges', function() {
 
     // -----------
