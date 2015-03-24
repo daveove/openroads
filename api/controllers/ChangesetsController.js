@@ -81,7 +81,7 @@ module.exports = {
             sails.log(err);
             return res.badRequest('Encountered error creating a new changeset');
           }
-          return res.ok(changeset.id);
+          return res.json({id: changeset.id});
         });
       }
 
