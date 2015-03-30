@@ -1,0 +1,280 @@
+/* Helpers */
+
+.visually-hidden {
+  border: 0 none;
+  clip: rect(0px, 0px, 0px, 0px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+
+/* Generic styles */
+
+html, body {
+  box-sizing: border-box;
+  color: #564f50;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Links */
+
+a {
+  cursor: pointer;
+  color: #564f50;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #564f50;
+}
+
+a:hover {
+  opacity: 0.64;
+  outline: none;
+}
+
+a:active{
+  outline: none;
+}
+
+/* List styles */
+
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Basic structure */
+
+#site-canvas {
+  height: 100%;
+}
+
+#site-header:after {
+  clear: both;
+  content: " ";
+  display: table;
+}
+
+#site-body {
+  height: calc(100% - 4rem); /* 100% - height header */
+  width: 100%;
+}
+
+#main-frame {
+  border: none;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+
+/* Site header */
+
+#site-header {
+  box-shadow: inset 0 -1px 0 0 #ccc;
+  padding: 1rem;
+}
+
+#site-headline {
+  float: left;
+  padding: 0;
+}
+
+#site-title {
+  line-height: 2rem;
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+#tag-line {
+  font-size: 0.75rem;
+  line-height: 1;
+  text-transform: uppercase;
+  vertical-align: 0.5rem;
+}
+
+#prime-nav {
+  float: right;
+  padding: 0;
+}
+
+#prime-nav a {
+  display: block;
+  color: inherit;
+}
+
+.global-menu {
+  list-style: none;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+.global-menu li {
+  float: left;
+  padding-left: 2rem;
+}
+.global-menu a, .global-menu a:visited {
+  color: inherit;
+  display: block;
+  font-weight: bold;
+  line-height: 2rem;  
+  position: relative; 
+}
+
+
+/* Analytics wireframe */
+
+
+body.analytics {
+  height: auto;
+}
+
+.analytics a.admin-area { /* links that allow easy navigation between admin areas*/
+  color: #006699;
+}
+
+.analytics h1 {
+  margin-top: 0;
+}
+
+.analytics h2 {
+  font-size: 1.25rem;
+}
+
+.analytics header {
+  border-right: 1px #ccc solid;
+  float: left;
+  padding: 1rem;
+  width: 33.3333%;
+  max-width: 23rem;
+}
+
+.analytics #content {
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.analytics article,
+.analytics header,
+.analytics #content {
+  height: 100%;
+}
+
+.analytics nav form,
+.analytics nav input {
+  width: 100%;
+}
+
+.analytics nav input {
+  height: 2rem;
+}
+
+.analytics nav ul {
+  margin-top: 2rem;
+}
+
+.analytics nav a {
+  border-left: 4px #fff solid;
+  display: block;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+}
+
+.analytics nav a.active {
+  border-left: 4px #006699 solid;
+
+}
+
+.analytics nav a:active,
+.analytics nav a.active {
+  font-weight: bold;
+}
+
+.analytics nav li ul {
+  border-bottom: 0;
+  margin: 0 0 0 1rem;
+}
+
+
+.analytics .stats::after {
+  content:'';
+  display:block;
+  clear: both;
+}
+
+.analytics .stats-box {
+  background-color: #eee;
+  border: 1px #ccc solid;
+  float: left;
+  font-size: 0.875rem;
+  margin-right: 2rem;
+  padding: 0.5rem;
+  text-align: center;
+  width: 8rem;
+}
+
+
+/* Analytics - tables */
+
+.table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  background-color: transparent;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.table td, th {
+  padding: 0;
+}
+
+.table th {
+  text-align: left;
+}
+
+.table > thead > tr > th {
+  vertical-align: bottom !important;
+  border-bottom: 2px solid #564f50;
+}
+
+.table > thead > tr > th a {
+  display: inline-block;
+  color: #564f50;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  padding: 0.5rem;
+  vertical-align: top;
+  border-top: 1px solid #564f50;
+}
+
+.table tr.total {
+  font-weight: bold;
+}
+.table th.value {
+  width: 6rem;
+}
+.table td.value {
+  text-align: right;
+}

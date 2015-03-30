@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title translate>OpenRoads - prototype</title>
+    <meta name="description" content="OpenRoads Philippines" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+    <link rel="stylesheet" href="assets/styles/main.css">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://documentcloud.github.com/underscore/underscore-min.js"></script>
+    <script src="http://documentcloud.github.com/backbone/backbone-min.js"></script>
+  </head>
+
+  <body>
+    <div id="site-canvas">
+
+      <header id="site-header" role="banner">
+        <div id="site-headline">
+          <a title="OpenRoads" href="" >
+            <h1 id="site-title">Open<strong>Roads</strong> <span id="tag-line">prototype</span></h1>
+          </a>
+        </div>
+        <nav id="prime-nav" role="navigation">
+          <h1 class="menu-title visually-hidden"><a href="#nav-links" class="toggle"><span>Menu</span></a></h1>
+          <div class="menu-wrapper">
+            <ul class="menu global-menu">
+              <li><a href="#/editor" title="Network Editor">Editor</a></li>
+              <li><a href="#/verification" title="Verification and error checking">Verification</a></li>
+              <li><a href="#/analytics" title="Analytics and dashboards">Analytics</a></li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+
+      <main id="site-body" role="main"> 
+        <iframe src="" id="main-frame" name="main-frame" onload="this.focus()"></iframe>
+      </main>
+      
+    </div>
+
+    <script src="assets/scripts/main.js"></script>
+  </body>
+</html>
