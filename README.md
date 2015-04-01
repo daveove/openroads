@@ -13,7 +13,7 @@ $ python -m SimpleHTTPServer 9898
 Starts the server at `http://localhost:9898`
 
 ### Implementing the header
-For technical docs on how to implement this in the OR applications, check `docs/README.md`
+For technical docs on how to implement this in the OR applications, check `docs/or-wrapper.md`.
 
 ## The OpenRoads project
 Other repositories that are part of the OpenRoads ecosystem:
