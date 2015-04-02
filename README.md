@@ -1,57 +1,36 @@
 # OpenRoads
-[![Build Status](https://magnum.travis-ci.com/developmentseed/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads)
+OpenRoads is a set of tools that allows for management and collaborative editing of road network data. Most of them are forks from OSM applications that were adapted and streamlined for the OR use case.
 
-This is the main repo for the Philippines OpenRoads project containing the API. Other projects part of this project:
+The following repositories are part of the OR ecosystem:
 
-- [OR network editor](https://github.com/developmentseed/openroads-iD) - fork of iD
-- [OR verification platform](https://github.com/developmentseed/openroads-tofix) - fork of To-fix
+- [OR API](https://github.com/developmentseed/openroads-api)  
+The OSM API was partially ported to Sails.js [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-api.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-api)
+- [OR network editor](https://github.com/developmentseed/openroads-iD)  
+Forked from iD
+- [OR verification platform](https://github.com/developmentseed/openroads-tofix)  
+A fork of To-fix
 
-## Contributing
+This is the main repo that contains the frontend wrapper that glues all these applications together. It is also used to version some other things that might end up in their own repo at some point: general docs, data processing scripts and wireframes.
 
-### Installing dependencies
-```sh
-git clone git@github.com:developmentseed/openroads.git
-cd openroads
-npm install
+## The wrapper
+The wrapper is the bit of glue that brings the OR eco-system together for the end users. It contains a shared header, loads each of the applications in an `<iframe>` and takes care of the routing.
+
+### Getting started
+
+```
+$ python -m SimpleHTTPServer 9898
 ```
 
-Install sails globally:
+Starts the server at `http://localhost:9898`
 
-```sh
-sudo npm install -g sails
-```
+### Implementing the header
+For technical docs on how to implement this in the OR applications, check `docs/or-wrapper.md`.
 
-### Local configuration
+## The OpenRoads project
 
-Before running the server, you will need to modify `config/local.js` to include directions to the postgresql database. You'll want to include the following:
+### Issues
+The [issue queue of this repository](https://github.com/developmentseed/openroads/issues) is used to track the overall progress of the project.  
+The queue of each separate tool should only be used for issues that are very specific to that application.
 
-
-```javascript
-module.exports.connections = {
-  osmPostgreSQL: {
-    adapter: 'sails-postgresql',
-    url: 'postgres://USER:PASSWORD@HOST:POST/DATABASE',
-    pool: false,
-    ssl: false
-  }
-}
-```
-
-### Installing a database with docker
-
-The `db-server` directory contains instructions on running your own postgresql database with the appropriate table schema using Docker. For Mac OS X users you might need [boot2docker](https://docs.docker.com/installation/mac/)
-
-
-### Running
-
-To run the server, run the following command:
-
-```sh
-sails lift
-```
-
-To test the bounding box query:
-
-```sh
-curl http://localhost:1337/xml/map?bbox=123.81042480468751,9.584500864717155,123.81591796875,9.58991730708743
-```
+### Hosting and deployment
+The wiki contains an [overview of the hosting and deployment](https://github.com/developmentseed/openroads/wiki/Hosting-of-OR-ecosystem) of all the applications.

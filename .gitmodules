@@ -1,3 +1,0 @@
-[submodule "bin/ogr2osm"]
-	path = bin/ogr2osm
-	url = https://github.com/pnorman/ogr2osm
