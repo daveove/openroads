@@ -3,12 +3,13 @@ OpenRoads is a set of tools that allows for management and collaborative editing
 
 The following repositories are part of the OR ecosystem:
 
-- [OR API](https://github.com/developmentseed/openroads-api)  
-The OSM API was partially ported to Sails.js [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-api.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-api)
-- [OR network editor](https://github.com/developmentseed/openroads-iD)  
-Forked from iD
-- [OR verification platform](https://github.com/developmentseed/openroads-tofix)  
-A fork of To-fix
+| | | |
+| --- | --- | --- |
+| [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-api.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-api) | [API](https://github.com/developmentseed/openroads-api)  | The partial port of the OSM API to Hapi |
+| [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-iD.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-iD) | [Network editor](https://github.com/developmentseed/openroads-iD) | Forked from iD |
+| | [Verification platform](https://github.com/developmentseed/openroads-tofix) | A fork of To-fix |
+| | [Analytics](https://github.com/developmentseed/openroads-analytics) | Analytics and dashboards |
+
 
 This is the main repo that contains the frontend wrapper that glues all these applications together. It is also used to version some other things that might end up in their own repo at some point: general docs, data processing scripts and wireframes.
 
