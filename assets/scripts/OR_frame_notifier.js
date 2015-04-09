@@ -3,6 +3,7 @@ var ORFrameNotifier = function(id) {
     console.warn('Not inside an iframe. ORFrameNotifier won\'t be initialized.');
     return;
   }
+  console.info('ORFrameNotifier was initialized for id', id);
 
   function notify_parent() {
     window.parent.postMessage({

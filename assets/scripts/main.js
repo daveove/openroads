@@ -1,12 +1,12 @@
 // Links to the apps the wrapper is aggregating.
 var OR = {
-  editor: 'http://devseed.com/openroads-iD',
-  verification: 'http://localhost:3000',
+  editor: '//devseed.com/openroads-iD/',
+  verification: '//devseed.com/to-fix/',
 
   // The analytics app uses the same styles and lives in the same repo as
-  // the wrapper.
+  // the wrapper. Use the full url anyway.
   // For now...
-  analytics: '/analytics/',
+  analytics: '//devseed.com/openroads/analytics/',
 };
 
 
@@ -19,8 +19,8 @@ var OR = {
 var AppRouter = Backbone.Router.extend({
   routes: {
     "editor(/)(*data)": "editor",
-    "verification(/)(:data)": "verification",
-    "analytics(/)(:data)": "analytics"
+    "verification(/)(*data)": "verification",
+    "analytics(/)(*data)": "analytics"
   }
 });
 // Initiate the router
@@ -34,12 +34,13 @@ var app_router = new AppRouter();
 /// The only thing they actually do is set the iframe src based on the `data`
 /// param from the route.
 app_router.on('route:editor', function(data) {
-  var a = data ? '#' + data : '';
+  var a = data ? data : '';
   $('#main-frame').attr('src', OR.editor + a);
 });
 
 app_router.on('route:verification', function(data) {
-  $('#main-frame').attr('src', OR.verification);
+  var a = data ? data : '';
+  $('#main-frame').attr('src', OR.verification + a);
 });
 
 app_router.on('route:analytics', function(data) {
@@ -60,21 +61,40 @@ Backbone.history.start();
 /// the app.
 /// 
 /// The switch is done based on the app id, defined when the OR_frame_notifier
-/// is included
+/// is included.
+///
+///
+/// What this actually does:
+/// When a the iframe's url changes it is sent via postMessage to the parent. It
+/// removes the base portion on the url (defined in the OR object) and stores
+/// the rest:
+/// - Url on the "verification" changes to:
+///     http://devseed.com/to-fix/#/task/devseedexample
+/// - Prefix is removed resulting in:
+///     #/task/devseedexample
+/// - Appended to the current url:
+///     http://devseed.com/openroads/#/verification/#/task/devseedexample
+/// - When entering the page, everything after (/#/verification/)
+///   is sent to the iframe alongside the proper prefix.
+///   This is done in section "Backbone route"
+///
 window.addEventListener("message", function(e) {
   if (e.data.type == 'urlchange') {
 
     switch(e.data.id) {
-      // The editor is an one-page app, therefore we only need the hash.
       case 'editor':
-        var hash = e.data.url.split('#');
-        app_router.navigate('/editor/' + hash[1], {replace: true});
+        var hash = cleanUrl(e.data.url, OR.editor);
+        // The editor's url keeps changing. Better to replace instead of
+        // adding to history.
+        app_router.navigate('#/editor/' + hash, {replace: true});
       break;
-      // Analytics is a multipage app and and since has the same name as our
-      // route we only need to remove the domain.
+      case 'verification':
+        var hash = cleanUrl(e.data.url, OR.verification);
+        app_router.navigate('#/verification/' + hash);
+      break;
       case 'analytics':
-        // Will navigate to something like: analytics/index.html
-        app_router.navigate('#/' + rmDomain(e.data.url));
+        var hash = cleanUrl(e.data.url, OR.analytics);
+        app_router.navigate('#/analytics/' + hash);
       break;
     }
   }
@@ -86,11 +106,6 @@ window.addEventListener("message", function(e) {
 /// Helpers
 /// 
 
-function rmDomain(url) {
-  var p = document.createElement('a');
-  p.href = url;
-
-  var domain = p.protocol + '//' + p.host;
-
-  return url.replace(new RegExp(domain + '\/?'), '');
+function cleanUrl(url, base) {
+  return url.replace(new RegExp('(http:|https:)?' + base), '');
 }
