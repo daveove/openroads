@@ -1,12 +1,12 @@
 // Links to the apps the wrapper is aggregating.
 var OR = {
-  editor: 'http://devseed.com/openroads-iD',
-  verification: 'http://localhost:3000',
+  editor: 'http://devseed.com/openroads-iD/',
+  verification: 'http://devseed.com/to-fix/',
 
   // The analytics app uses the same styles and lives in the same repo as
   // the wrapper.
   // For now...
-  analytics: '/analytics/',
+  analytics: '//devseed.com/openroads/analytics/',
 };
 
 
@@ -74,7 +74,13 @@ window.addEventListener("message", function(e) {
       // route we only need to remove the domain.
       case 'analytics':
         // Will navigate to something like: analytics/index.html
-        app_router.navigate('#/' + rmDomain(e.data.url));
+        app_router.navigate('#/' + rmDomain(e.data.url).replace('openroads/', ''));
+      break;
+      // Analytics is a multipage app and and since has the same name as our
+      // route we only need to remove the domain.
+      case 'analytics':
+        // Will navigate to something like: analytics/index.html
+        app_router.navigate('#/' + rmDomain(e.data.url).replace('openroads/', ''));
       break;
     }
   }
