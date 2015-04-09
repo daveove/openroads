@@ -1,6 +1,6 @@
 // Links to the apps the wrapper is aggregating.
 var OR = {
-  editor: 'http://localhost:8000',
+  editor: 'http://devseed.com/openroads-iD',
   verification: 'http://localhost:3000',
 
   // The analytics app uses the same styles and lives in the same repo as
@@ -62,12 +62,11 @@ Backbone.history.start();
 /// The switch is done based on the app id, defined when the OR_frame_notifier
 /// is included
 window.addEventListener("message", function(e) {
-  console.log(e.data);
   if (e.data.type == 'urlchange') {
 
     switch(e.data.id) {
-      // The iD-editor is an one-page app, therefore we only need the hash.
-      case 'iD-editor':
+      // The editor is an one-page app, therefore we only need the hash.
+      case 'editor':
         var hash = e.data.url.split('#');
         app_router.navigate('/editor/' + hash[1], {replace: true});
       break;
