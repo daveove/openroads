@@ -18,6 +18,7 @@ var OR = {
 /// editor case it will have the map coordinates.
 var AppRouter = Backbone.Router.extend({
   routes: {
+    "(/)":"editor",
     "editor(/)(*data)": "editor",
     "verification(/)(*data)": "verification",
     "analytics(/)(*data)": "analytics"
