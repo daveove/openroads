@@ -6,7 +6,7 @@ var OR = {
   // The analytics app uses the same styles and lives in the same repo as
   // the wrapper. Use the full url anyway.
   // For now...
-  analytics: '//devseed.com/openroads/analytics/',
+  analytics: '//devseed.com/openroads-analytics/',
 };
 
 
