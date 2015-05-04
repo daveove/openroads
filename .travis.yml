@@ -3,14 +3,13 @@ env:
   global:
   - GH_REF=github.com/developmentseed/openroads.git
   - DEPLOY_BRANCH=master
-  - secure: bVTOHWQoKv5mzM18jSbFU9Nd91SNdidEEFbLM5P8Z8REs96Lc83/rFF/JHHavIa0b3fKG4YNqbHN7ow4YXwRIg3aV/sE0UNcdhkbLgz5OOQtwL3E3CfuWesBxPDc1MqDHEkORqIT7ymDjgnhnGI69JBDfyLY4iatdbjdR1eAepQ=
+  - secure: dJwPc7HywA4oBRZz8DnjqNEpSbEtrBFl1FiXIJGbMzTMJiBFRzp/U7qp1uJXadqGLpO79ZcH8d6aJ/P3/8nmYwI/w5cAcCPvDVGdzMYX5G/qdByW4OvK85E9HA6qVKF+GrWhH0ocO9gTkpIC9qrbQgrmYKUd/4D/9ta2yF9VoG8=
 
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
-- chmod +x ./.build_scripts/test.sh
 
 script:
-- ./.build_scripts/test.sh
+- echo No test specified
 
 after_success:
-- ./.build_scripts/deploy.sh
+- "./.build_scripts/deploy.sh"
