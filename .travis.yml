@@ -7,8 +7,10 @@ env:
   
 before_install:
   - chmod +x ./.build_scripts/deploy.sh
+  - chmod +x ./.build_scripts/test.sh
 
-script: "echo \"No test specified\" && exit 0"
+script:
+  - ./.build_scripts/test.sh
 
 after_success:
   - ./.build_scripts/deploy.sh

@@ -1,0 +1,1 @@
+echo No test specified && exit 0
