@@ -116,6 +116,10 @@ ul, li {
   color: inherit;
 }
 
+#prime-nav li.active a {
+  color: #006699;
+}
+
 .global-menu {
   list-style: none;
   overflow: hidden;

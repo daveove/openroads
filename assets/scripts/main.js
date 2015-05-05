@@ -34,6 +34,11 @@ var app_router = new AppRouter();
 /// 
 /// The only thing they actually do is set the iframe src based on the `data`
 /// param from the route.
+app_router.on('route', function(route) {
+  $('.global-menu li').removeClass('active');
+  $('.global-menu a[href="#/' + route + '"]').parent().addClass('active');
+});
+
 app_router.on('route:editor', function(data) {
   var a = data ? data : '';
   $('#main-frame').attr('src', OR.editor + a);
