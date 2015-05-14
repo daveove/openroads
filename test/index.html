@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title translate>OpenRoads Mocha</title>
+    <meta name="description" content="OpenRoads Philippines Test" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+    <link rel="stylesheet" href="lib/mocha.css" />
+
+  </head>
+
+  <body>
+    <div id="mocha"></div>
+    <div id="main-frame"></div>
+    <script src="lib/mocha.js"></script>
+    <script src="lib/chai.js"></script>
+    <script src="lib/sinon-1.14.1.js"></script>
+
+    <script>
+      mocha.setup({
+        ui: 'bdd'
+      });
+
+      var assert = chai.assert;
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="../assets/scripts/vendor/underscore-min.js"></script>
+    <script src="../assets/scripts/vendor/backbone-min.js"></script>
+    <script src="../assets/scripts/main.js"></script>
+
+
+    <script src="spec/routes.js"></script>
+    <script>
+      (window.mochaPhantomJS || window.mocha).run();
+    </script>
+  </body>
+</html>
