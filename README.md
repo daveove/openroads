@@ -7,7 +7,7 @@ The following repositories are part of the OR ecosystem:
 | --- | --- | --- |
 | [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-api.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-api) | [API](https://github.com/developmentseed/openroads-api)  | The partial port of the OSM API to Hapi |
 | [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-iD.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/developmentseed/openroads-iD) | [Network editor](https://github.com/developmentseed/openroads-iD) | Forked from iD |
-| [![Build Status](https://magnum.travis-ci.com/developmentseed/openroads-analytics.svg?token=d4tUG3NhuWNZYSxWndVL&branch=feature/travis)](https://magnum.travis-ci.com/developmentseed/openroads-analytics) | [Analytics](https://github.com/developmentseed/openroads-analytics) | Analytics and dashboards |
+| [![Build Status](https://magnum.travis-ci.com/opengovt/openroads-analytics.svg?token=d4tUG3NhuWNZYSxWndVL&branch=master)](https://magnum.travis-ci.com/opengovt/openroads-analytics) | [Analytics](https://github.com/opengovt/openroads-analytics) | Analytics and dashboards |
 | | [Frontend to-fix](https://github.com/developmentseed/to-fix) | Frontend for the verification platform |
 | | [Backend to-fix](https://github.com/developmentseed/to-fix-backend) | Backend for the verification platform |
 | | [OpenRoads data](https://github.com/developmentseed/openroads-data) | Everything related to data and maps |
