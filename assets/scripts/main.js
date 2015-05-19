@@ -1,6 +1,6 @@
 // Links to the apps the wrapper is aggregating.
 var OR = {
-  editor: '//github.com/opengovt/openroads-iD/',
+  editor: '//opengovt.github.io/openroads-iD/',
   verification: '//devseed.com/to-fix/',
   analytics: '//opengovt.github.io/openroads-analytics/',
 };
