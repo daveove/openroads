@@ -1,9 +1,9 @@
 language: node_js
 env:
   global:
-  - GH_REF=github.com/developmentseed/openroads.git
+  - GH_REF=github.com/opengovt/openroads.git
   - DEPLOY_BRANCH=master
-  - secure: dJwPc7HywA4oBRZz8DnjqNEpSbEtrBFl1FiXIJGbMzTMJiBFRzp/U7qp1uJXadqGLpO79ZcH8d6aJ/P3/8nmYwI/w5cAcCPvDVGdzMYX5G/qdByW4OvK85E9HA6qVKF+GrWhH0ocO9gTkpIC9qrbQgrmYKUd/4D/9ta2yF9VoG8=
+  - secure: OkfWr+DDlOW8h3FLcPWRNQqaRzBltDxC24voLuvf666LVjx8HzJryc9m8xRMGjJGwhP+UNJmLiuAbIPkrQU542MtpYoFnKKAMJbKicwjyGwb+sdr2srMvRQ1BDk6b0AcHK0dUSvUcp0JUJVcJ3caTNlkmz00pwz4GnTF+DpKdnA=
 
 before_install:
 - chmod +x ./.build_scripts/deploy.sh
@@ -12,4 +12,4 @@ script:
 - echo No test specified
 
 after_success:
-- "./.build_scripts/deploy.sh"
+- ./.build_scripts/deploy.sh

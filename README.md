@@ -1,4 +1,6 @@
 # OpenRoads
+[![Build Status](https://magnum.travis-ci.com/opengovt/openroads.svg?token=d4tUG3NhuWNZYSxWndVL&branch=develop)](https://magnum.travis-ci.com/opengovt/openroads)
+
 OpenRoads is a set of tools that allows for management and collaborative editing of road network data. Most of them are forks from OSM applications that were adapted and streamlined for the OR use case.
 
 The following repositories are part of the OR ecosystem:
