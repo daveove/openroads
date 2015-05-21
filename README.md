@@ -25,8 +25,7 @@ $ python -m SimpleHTTPServer 9898
 
 Starts the server at `http://localhost:9898`
 
+To run tests, point your browser to `http://localhost:9898/test`
+
 ### Implementing the header
 For technical docs on how to implement this in the OR applications, check `docs/or-wrapper.md`.
-
-## Deploying
-The OpenRoads wrapper is hosted on Github Pages and deployed using Travis.

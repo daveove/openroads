@@ -7,14 +7,14 @@ describe('Wrapper routes', function() {
   describe('Editor route', function() {
     it('Should call the editor with the appropriate route data', function() {
       router.navigate('editor/123', {trigger: true});
-      $main.attr('src').should.eql('//devseed.com/openroads-iD/123');
+      $main.attr('src').should.eql('//opengovt.github.io/openroads-iD/123');
     });
   });
 
   describe('Analytics route', function() {
     it('Should call the dashboard with the appropriate route data', function() {
       router.navigate('analytics/abc', {trigger: true});
-      $main.attr('src').should.eql('//devseed.com/openroads-analytics/abc');
+      $main.attr('src').should.eql('//opengovt.github.io/openroads-analytics/abc');
     });
   });
 
