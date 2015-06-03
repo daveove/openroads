@@ -5,7 +5,7 @@ set -e # halt script on error
 if [ $TRAVIS_PULL_REQUEST = "false" ] && [ $TRAVIS_BRANCH = ${DEPLOY_BRANCH} ]; then
   echo "Get ready, we're pushing to gh-pages!"
   mkdir dist
-  cp -r index.html assets dist
+  cp -r index.html assets CNAME dist
   cd dist
   git init
   git config user.name "Travis-CI"
