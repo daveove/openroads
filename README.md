@@ -12,7 +12,8 @@ The following repositories are part of the OR ecosystem:
 | [![Build Status](https://magnum.travis-ci.com/opengovt/openroads-analytics.svg?token=d4tUG3NhuWNZYSxWndVL&branch=master)](https://magnum.travis-ci.com/opengovt/openroads-analytics) | [Analytics](https://github.com/opengovt/openroads-analytics) | Analytics and dashboards |
 | | [Frontend to-fix](https://github.com/developmentseed/to-fix) | Frontend for the verification platform |
 | | [Backend to-fix](https://github.com/developmentseed/to-fix-backend) | Backend for the verification platform |
-| | [OpenRoads data](https://github.com/opengovt/openroads-data) | Everything related to data and maps |
+| | [OpenRoads data](https://github.com/opengovt/openroads-data) | Everything related to road network data and maps |
+| | [OpenRoads boundaries](https://github.com/opengovt/openroads-boundaries) | The political boundaries used in the project |
 
 This is the main repo that contains the frontend wrapper that glues all these applications together.
 
